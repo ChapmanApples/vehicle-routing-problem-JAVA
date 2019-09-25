@@ -9,7 +9,7 @@ import jade.lang.acl.ACLMessage;
 
 @SuppressWarnings("serial")
 public class TestSenderAgent extends Agent{
-	int constraint = (int)(Math.random() * 10 + 1);
+	public int constraint = (int)(Math.random() * 10 + 1);
 	protected void setup() {
 		// First set-up message receiving behavior      
 		CyclicBehaviour messageListeningBehaviour = new CyclicBehaviour(this)    
@@ -17,7 +17,7 @@ public class TestSenderAgent extends Agent{
 			public void action() {     
 				ACLMessage msg= receive();     
 				if (msg!=null) {      
-					System.out.println(getLocalName()+ ": Received response " + 
+					System.out.println(getLocalName()+ ": Received coordinates " + 
 				msg.getContent() + " from " + msg.getSender().getLocalName());     
 					}     
 				block();     
@@ -27,10 +27,10 @@ public class TestSenderAgent extends Agent{
 					
 			// Send message to Master agent (hard-coded)   
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);  
-			msg.setContent( constraint + " parcels" );         
+			msg.setPerformative(constraint);         
 		    msg.addReceiver(new AID("MasterAgent", AID.ISLOCALNAME) );                   
 			// Send Message (only once)       
-			System.out.println(getLocalName()+ ": Sending message " + msg.getContent() + " to ");     
+			System.out.println(getLocalName()+ ": Sending message: I can carry " + msg.getPerformative() + "parcels to ");     
 			Iterator<?> receivers = msg.getAllIntendedReceiver();       
 			while(receivers.hasNext()) {        
 				System.out.println(((AID)receivers.next()).getLocalName());       

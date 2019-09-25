@@ -13,7 +13,6 @@ public class RoutingWorld {
 		int [] loc_x = new int[locationNumber];
 		int [] loc_y = new int[locationNumber];
 		
-		
 		loc_x[0] = 45;
 		loc_y[0] = 32;
 		loc_x[1] = 22;
@@ -75,7 +74,7 @@ public class RoutingWorld {
 						world[x][y] = new Node("Depot", 0, x, y);
 					}
 					else if(x == loc_x[i] && y == loc_y[i]) {
-						world[x][y] = new Node("Location", (int)(Math.random() * 10 + 1), x, y);
+						world[x][y] = new Node("Location " + i, (int)(Math.random() * 10 + 1), x, y);
 					}
 				}
 				if(world[x][y] == null) {
@@ -108,6 +107,7 @@ public class RoutingWorld {
 //
 //	};
 		//System.out.println(l2);
+		/*
 		for (int i =0; i<100; i++) {
 			for(int j = 0; j<100; j++) {
 				if(world[i][j].name == "Location") {
@@ -132,6 +132,7 @@ public class RoutingWorld {
 		for(Node a : Locations) {
 			System.out.println(a.parcels);
 		}
+		*/
 		
 		
 		
@@ -160,14 +161,26 @@ public class RoutingWorld {
 		for (int i = 0; i<world.length;i++) {
 			for(int j = 0; j<world.length;j++) {
 			Node n = world[i][j];
-			if(n.name == "Location") {
-				Locations.add(n);	
-			}
+				if(n.name.contains("Location")) {
+					Locations.add(n);	
+				}
 			}
 			
 		}
 		 return Locations;
-		
+	}
+	
+	public Node Depot(){
+		//Node nod = null;
+		for (int i = 0; i<world.length;i++) {
+			for(int j = 0; j<world.length;j++) {
+			Node n = world[i][j];
+				if(n.name.contains("Depot")) {
+					return n;	
+				}
+			}
+		}
+		return null;
 	}
 	
 	
