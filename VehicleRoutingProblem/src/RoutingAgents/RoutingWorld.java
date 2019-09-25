@@ -162,14 +162,26 @@ public class RoutingWorld {
 		for (int i = 0; i<world.length;i++) {
 			for(int j = 0; j<world.length;j++) {
 			Node n = world[i][j];
-			if(n.name.contains("Location")) {
-				Locations.add(n);	
-			}
+				if(n.name.contains("Location")) {
+					Locations.add(n);	
+				}
 			}
 			
 		}
 		 return Locations;
-		
+	}
+	
+	public Node Depot(){
+		//Node nod = null;
+		for (int i = 0; i<world.length;i++) {
+			for(int j = 0; j<world.length;j++) {
+			Node n = world[i][j];
+				if(n.name.contains("Depot")) {
+					return n;	
+				}
+			}
+		}
+		return null;
 	}
 	
 	
