@@ -7,7 +7,6 @@ public class RoutingWorld {
 	public Node [][] world = new Node [100][100];
 	public void BuildWorld() {
 		// TODO Auto-generated method stub
-		
 		 // total number of vehicles working in the world
 		int vehicleNumber = 1;
 		int locationNumber = 17; // the total number of locations in the world

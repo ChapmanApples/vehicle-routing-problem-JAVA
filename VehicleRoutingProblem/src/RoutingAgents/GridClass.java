@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
@@ -82,11 +83,11 @@ public class GridClass extends Application {
 //			    };
 //		
 			Group root = new Group();
-			
 			for(int j=0;j<10;j++) {
 				for(int i=0;i<10;i++) {
-					
+				
 					root.getChildren().addAll(drawLine(i*60,j*60, 60));
+					
 				}
 			}
 			
