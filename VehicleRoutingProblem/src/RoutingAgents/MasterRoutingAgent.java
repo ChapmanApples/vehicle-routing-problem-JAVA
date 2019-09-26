@@ -75,7 +75,7 @@ public class MasterRoutingAgent extends Agent{
 					}
 				}
 				ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
-				msg_pos.setContent(dest.x_pos + " "+ dest.y_pos);
+				msg_pos.setContent(dest.name);
 				msg_pos.addReceiver(new AID(msg.getSender().getLocalName(), AID.ISLOCALNAME) );	  
 				send(msg_pos);
 				}
