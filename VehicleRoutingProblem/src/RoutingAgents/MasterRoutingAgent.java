@@ -69,7 +69,7 @@ public class MasterRoutingAgent extends Agent{
 				for(Node a : locations) {
 					if(a.parcels < msg.getPerformative() ) {
 						dest = a;
-						System.out.println("Sending " + msg.getSender().getLocalName() + " to " + a.name + " with "
+						System.out.println(getLocalName() + ": Sending " + msg.getSender().getLocalName() + " to " + a.name + " with "
 					+ a.parcels + " parcels to be delivered");
 						break;
 					}

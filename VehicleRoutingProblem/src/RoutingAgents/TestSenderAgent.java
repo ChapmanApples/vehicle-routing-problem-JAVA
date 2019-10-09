@@ -31,8 +31,15 @@ public class TestSenderAgent extends Agent{
 						}
 					}
 					System.out.println(getLocalName()+ ": Received coordinates (" + 
-				dest.x_pos + ", " + dest.y_pos + ") from " + msg.getSender().getLocalName());     
-					}     
+							dest.x_pos + ", " + dest.y_pos + ") from " + msg.getSender().getLocalName()); 
+					//query for route
+					ACLMessage howmsg = new ACLMessage(ACLMessage.INFORM);
+					howmsg.setContent("How do I get to " + dest.name + " ?");
+				    howmsg.addReceiver(new AID("MasterAgent", AID.ISLOCALNAME) );      
+				    send(howmsg);
+					//System.out.println(getLocalName() + ": Route confirmed. Going to "+ dest.name);
+					}
+				
 				block();     
 				}   
 			};   
@@ -43,7 +50,7 @@ public class TestSenderAgent extends Agent{
 			msg.setPerformative(constraint);         
 		    msg.addReceiver(new AID("MasterAgent", AID.ISLOCALNAME) );                   
 			// Send Message (only once)       
-			System.out.println(getLocalName()+ ": Sending message: I can carry " + msg.getPerformative() + "parcels to ");     
+			System.out.println(getLocalName()+ ": I can carry " + msg.getPerformative() + " parcels to ");     
 			Iterator<?> receivers = msg.getAllIntendedReceiver();       
 			while(receivers.hasNext()) {        
 				System.out.println(((AID)receivers.next()).getLocalName());       
