@@ -13,10 +13,8 @@ import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.util.tools.ArrayUtils;
 import java.util.Arrays;
 
-public class LABChoco {
-	
-public static void main(String[] args) {
-Model model = new Model("lab problem");
+public class TruckLocation {
+/**Model model = new Model("lab problem");
 
 int p = 5;
 int t = 5;
@@ -30,48 +28,8 @@ for (int i = 0; i < t; i++) {
 	model.sum(TruckParcel[i], "=", 1).post();
 }
 for (int i = 0; i < p; i++) {
-model.sum(getColumn(TruckParcel, i),"<=",2).post();
+	model.sum(getColumn(TruckParcel, i),"<=",2).post();
 }
-
-
-
-//model.sum(Trucks, "<=", 2).post();
-//model.sum(Parcels, "=", 1).post();
-//model.sum(TruckParcel[0], "=", 1).post();
-//model.sum(TruckParcel[1], "=", 1).post();
-//model.sum(TruckParcel[2], "=", 1).post();
-
-
-//for(int i =0; i<3; i++) {
-//	TruckParcel[i] = Trucks;
-//	for (int j = 0; j<4; j++) {
-//			TruckParcel[j] = Parcels;
-//		
-//			
-//	}
-//}
-model.getSolver().solve();
-
-
-for(int i =0; i<t; i++) {
-	for (int j = 0; j<p; j++) {
-		//System.out.println(Trucks[i]);
-		//System.out.println(Parcels[j]);
-		
-		System.out.print(TruckParcel[i][j].getValue()+"\t");
-	}
-	System.out.println();
-}
-
-
-
-
-
-
-
-
-}
-// Attribute :: https://stackoverflow.com/questions/30426909/get-columns-from-two-dimensional-array-in-java
 public static BoolVar[] getColumn(BoolVar[][] array, int index){
 	BoolVar[] column = new BoolVar[array[0].length]; // Here I assume a rectangular 2D array! 
     for(int i=0; i<column.length; i++){
@@ -79,5 +37,44 @@ public static BoolVar[] getColumn(BoolVar[][] array, int index){
     }
     return column;
 }
+*/
+	public static BoolVar[] getColumn(BoolVar[][] array, int index) {
+		BoolVar[]column = new BoolVar[array[0].length];
+		for(int i = 0; i <column.length;i++) {
+			column [i] = array[i][index];
+		}
+		return column;
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Model m = new Model ("Assigning trucks to Locations");
+int loc = 15;
+int trucks = 3;
+
+BoolVar[][] TruckLocation = m.boolVarMatrix(loc,trucks);
+
+for(int i = 0; i< loc;i++) {
+	//ensuring each location gets only one car
+	m.sum(TruckLocation[i], "=", 1).post();
+}
+for(int j = 0; j<trucks;j++) {
+	//ensuring each truck can carry at most 5 parcels
+	m.sum((getColumn(TruckLocation, j)), "<", 6).post();
+}
+
+m.getSolver().solve();
+
+
+for(int i =0; i<loc; i++) {
+	for (int j = 0; j<trucks; j++) {
+		//System.out.println(Trucks[i]);
+		//System.out.println(Parcels[j]);
+		
+		System.out.print(TruckLocation[i][j].getValue()+"\t");
+	}
+	System.out.println();
+}
+
+	}
 
 }

@@ -73,7 +73,7 @@ public class Choco3 {
 		p2.wt = 3;
 		p3.wt = 15;
 		
-		IntVar Weightsum = model.intvarsum(p1.wt,p2.wt,p3.wt);
+	//	IntVar Weightsum = model.intvarsum(p1.wt,p2.wt,p3.wt);
 		int Capacitysum = sum(a1.cap,a2.cap,a3.cap);
 		
 		
@@ -83,8 +83,8 @@ public class Choco3 {
 		IntVar[] AgentCapacityArray = model.intVarArray(3, 1, 20); // an array of length 3 between 1 and 20
 		System.out.println("somthing"+parcelWeightArray[0]);
 		model.arithm(parcelWeightArray[0], "-", 20).post();
-		model.sum(parcelWeightArray,"<",model.sum(AgentWeightArray));
-		model.arithm(var1, op, var2)
+	//	model.sum(parcelWeightArray,"<",model.sum(AgentWeightArray));
+		//model.arithm(var1, op, var2);
 		
 		System.out.println(parcelWeightArray[0]);
 		for(int i = 0; i<4; i ++) {
