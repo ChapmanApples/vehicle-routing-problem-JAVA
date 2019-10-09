@@ -18,19 +18,24 @@ public class LABChoco {
 public static void main(String[] args) {
 Model model = new Model("lab problem");
 
-int p = 5;
-int t = 5;
+int p = 5 ;
+int t = 3;
+int[] trucks = {1,2,3};
+
+
 //IntVar x = model.intVar("X", 0, 5);   
 //BoolVar[] Trucks = model.boolVarArray(3); //3 trucks
 //BoolVar[] Parcels = model.boolVarArray(4); //4 parcels
-BoolVar[][] TruckParcel = model.boolVarMatrix(t, p);
+BoolVar[][] TruckParcel = model.boolVarMatrix(p, t);
  
 //boolean[][] TruckParcel = new boolean [4][3] {Trucks,Parcels};
-for (int i = 0; i < t; i++) {
+for (int i = 0; i < p; i++) {
 	model.sum(TruckParcel[i], "=", 1).post();
 }
-for (int i = 0; i < p; i++) {
+for (int i = 0; i < t; i++) {
 model.sum(getColumn(TruckParcel, i),"<=",2).post();
+//model.sum(getColumn(TruckParcel, i),"!=",3).post();
+
 }
 
 
@@ -50,18 +55,24 @@ model.sum(getColumn(TruckParcel, i),"<=",2).post();
 //			
 //	}
 //}
-model.getSolver().solve();
-
-
-for(int i =0; i<t; i++) {
-	for (int j = 0; j<p; j++) {
+//model.setObjective(Model.MAXIMIZE, model.sum(getColumn(TruckParcel,0),"<=",2));
+model.getSolver().showShortStatistics();
+while(model.getSolver().solve()) {
+	
+System.out.println("Solution:");
+for(int i =0; i<p; i++) {
+	for (int j = 0; j<t; j++) {
 		//System.out.println(Trucks[i]);
 		//System.out.println(Parcels[j]);
+		
+		
 		
 		System.out.print(TruckParcel[i][j].getValue()+"\t");
 	}
 	System.out.println();
 }
+}
+
 
 
 
