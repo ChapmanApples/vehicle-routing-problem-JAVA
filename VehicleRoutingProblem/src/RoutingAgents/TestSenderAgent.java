@@ -1,5 +1,6 @@
 package RoutingAgents;
 
+import java.util.ArrayList;
 import java.util.Iterator; 
 import jade.core.AID; 
 import jade.core.Agent; 
@@ -10,15 +11,27 @@ import jade.lang.acl.ACLMessage;
 @SuppressWarnings("serial")
 public class TestSenderAgent extends Agent{
 	public int constraint = (int)(Math.random() * 10 + 1);
+	RoutingWorld world = new RoutingWorld(); 
+	ArrayList<Node> locations = new ArrayList<Node>();
+	
 	protected void setup() {
+		world.BuildWorld();
 		// First set-up message receiving behavior      
 		CyclicBehaviour messageListeningBehaviour = new CyclicBehaviour(this)    
-		{     
+		{ 
 			public void action() {     
-				ACLMessage msg= receive();     
-				if (msg!=null) {      
-					System.out.println(getLocalName()+ ": Received coordinates " + 
-				msg.getContent() + " from " + msg.getSender().getLocalName());     
+				locations = world.TellMeLocations();
+				Node dest = new Node("loc", 0, 0, 0);
+				ACLMessage msg= receive();   
+				if (msg!=null) {   
+					String loc_name = msg.getContent();
+					for(Node a : locations) {
+						if(a.name.contains(loc_name)) {
+							dest = a;
+						}
+					}
+					System.out.println(getLocalName()+ ": Received coordinates (" + 
+				dest.x_pos + ", " + dest.y_pos + ") from " + msg.getSender().getLocalName());     
 					}     
 				block();     
 				}   
