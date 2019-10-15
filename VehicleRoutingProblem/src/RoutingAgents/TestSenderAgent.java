@@ -34,8 +34,9 @@ public class TestSenderAgent extends Agent{
 							dest.x_pos + ", " + dest.y_pos + ") from " + msg.getSender().getLocalName()); 
 					//query for route
 					ACLMessage howmsg = new ACLMessage(ACLMessage.INFORM);
-					howmsg.setContent("How do I get to " + dest.name + " ?");
-				    howmsg.addReceiver(new AID("MasterAgent", AID.ISLOCALNAME) );      
+					howmsg.setContent("Route to " + dest.name + " ?");
+				    howmsg.addReceiver(new AID("MasterAgent", AID.ISLOCALNAME) );  
+				    System.out.println(getLocalName() + ": How do I get to " + dest.name + " ?");
 				    send(howmsg);
 					//System.out.println(getLocalName() + ": Route confirmed. Going to "+ dest.name);
 					}

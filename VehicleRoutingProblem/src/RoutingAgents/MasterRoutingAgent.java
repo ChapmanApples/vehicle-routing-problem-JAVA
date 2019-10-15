@@ -57,10 +57,16 @@ public class MasterRoutingAgent extends Agent{
 				for(int i = 0; i < agentCount; i++) {	
 				ACLMessage msg= receive();     
 				if (msg!=null) {      
-					// Print out message content      
-					System.out.println(getLocalName()+ ": Received Capacity Constraints: " + msg.getSender().getLocalName() + " can carry " + msg.getPerformative() 
-					+ " parcels");      
-					}  
+					// Print out message content
+					//if(msg.getContent().contains("?")) {
+						//System.out.println("Calculating Route...");
+						//Call CHOCO function
+					//}
+					//else {
+						System.out.println(getLocalName()+ ": Received Capacity Constraints: " + msg.getSender().getLocalName() + " can carry " + msg.getPerformative() 
+						+ " parcels");
+					//}      
+				}  
 				locations = world.TellMeLocations();
 				System.out.println("There are: " + locations.size() + " Locations");
 				System.out.println("There are: " + parcels + " parcels");
