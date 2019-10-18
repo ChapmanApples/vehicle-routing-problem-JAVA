@@ -14,15 +14,51 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
 @SuppressWarnings("serial")
 public class MasterRoutingAgent extends Agent{
 	int agentCount = 0;
+	int loc_numb;
+	int packages;
+	int weight;
+	int totalWeight = 30;
+	Node location;
 	RoutingWorld world = new RoutingWorld(); 
 	ArrayList<Node> locations = new ArrayList<Node>();
+	ArrayList<Package> package_list = new ArrayList<Package>();
 	
 	protected void setup() {
 		world.BuildWorld();
-		System.out.println("Enter number of parcels to be delivered: ");
+		System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
+		String again = "yes";
 		Scanner input = new Scanner(System.in);
-		int parcels = input.nextInt();
+		
+		while(again.contains("yes")) {
+			
+			System.out.println("Enter location number to recieve packages: ");
+			loc_numb = input.nextInt();
+			for(Node a: locations) {
+				if(a.ID == loc_numb) {
+					location = a;
+				}
+			}
+			
+			System.out.println("Enter number of packages to be delivered: ");
+			packages = input.nextInt();
+			
+			System.out.println("Enter weight for each package in kg: ");
+			weight = input.nextInt();
+			
+			int total_weight = weight * packages;
+			System.out.println("Total weight: " + total_weight);
+			
+			Package parcel = new Package(location, total_weight);
+			package_list.add(parcel);
+			System.out.println("Your packages have been added to a delivery truck!");
+			
+			System.out.println("Do you wish to deliver to another location? (yes/no)");
+			again = input.next().toLowerCase(); 
+		}
+		
 		input.close();
+		
+		
 		AMSAgentDescription [] agents = null;        
 		try {             
 			SearchConstraints c = new SearchConstraints();             
@@ -69,8 +105,8 @@ public class MasterRoutingAgent extends Agent{
 				}  
 				locations = world.TellMeLocations();
 				System.out.println("There are: " + locations.size() + " Locations");
-				System.out.println("There are: " + parcels + " parcels");
-				Node dest = new Node("loc", 0, 0, 0);
+				System.out.println("There are: " + packages + " parcels");
+				Node dest = new Node("default", 0, 0, 0, 0);
 				
 				for(Node a : locations) {
 					if(a.parcels < msg.getPerformative() ) {

@@ -10,7 +10,7 @@ import jade.lang.acl.ACLMessage;
 
 @SuppressWarnings("serial")
 public class TestSenderAgent extends Agent{
-	public int constraint = (int)(Math.random() * 10 + 1);
+	public int constraint = (int)(Math.random() * 20 + 1);
 	RoutingWorld world = new RoutingWorld(); 
 	ArrayList<Node> locations = new ArrayList<Node>();
 	
@@ -21,7 +21,7 @@ public class TestSenderAgent extends Agent{
 		{ 
 			public void action() {     
 				locations = world.TellMeLocations();
-				Node dest = new Node("loc", 0, 0, 0);
+				Node dest = new Node("default",0, 0, 0, 0);
 				ACLMessage msg= receive();   
 				if (msg!=null) {   
 					String loc_name = msg.getContent();
@@ -51,7 +51,7 @@ public class TestSenderAgent extends Agent{
 			msg.setPerformative(constraint);         
 		    msg.addReceiver(new AID("MasterAgent", AID.ISLOCALNAME) );                   
 			// Send Message (only once)       
-			System.out.println(getLocalName()+ ": I can carry " + msg.getPerformative() + " parcels to ");     
+			System.out.println(getLocalName()+ ": I can carry up to " + msg.getPerformative() + " kilograms of packages ");     
 			Iterator<?> receivers = msg.getAllIntendedReceiver();       
 			while(receivers.hasNext()) {        
 				System.out.println(((AID)receivers.next()).getLocalName());       

@@ -19,20 +19,22 @@ public class LABChoco {
 public static void main(String[] args) {
 Model model = new Model("lab problem");
 
-int p = 6;
+int p = 12;
 int t = 3;
-int[] trucks = {1,2,3};
+
 
 
 //IntVar x = model.intVar("X", 0, 5);   
 //BoolVar[] Trucks = model.boolVarArray(3); //3 trucks
 //BoolVar[] Parcels = model.boolVarArray(4); //4 parcels
-BoolVar[][] TruckParcel = model.boolVarMatrix(p, t);
+IntVar parcels = model.intVar("P", new int[]{2, 3, 4});
+BoolVar[][] TruckParcel = model.boolVarMatrix(p, t); 
+
  
 //boolean[][] TruckParcel = new boolean [4][3] {Trucks,Parcels};
 for (int i = 0; i < t; i++) {
 	//System.out.println(getColumn(TruckParcel, i));
-model.sum(getColumn(TruckParcel, i, p), "<=", 2).post();
+model.sum(getColumn(TruckParcel, i, p), "<=", parcels).post();
 model.sum(getColumn(TruckParcel, i, p),">=",1).post();
 }
 
