@@ -7,12 +7,13 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour; 
 import jade.lang.acl.ACLMessage;
 
-
 @SuppressWarnings("serial")
-public class TestSenderAgent extends Agent{
-	public int constraint = (int)(Math.random() * 20 + 5);
+public class DeliveryAgent1 extends Agent{
+	
+	//public int constraint = (int)(Math.random() * 20 + 5);
 	RoutingWorld world = new RoutingWorld(); 
 	ArrayList<Node> locations = new ArrayList<Node>();
+	Truck da1 = new Truck(getLocalName());
 	
 	protected void setup() {
 		world.BuildWorld();
@@ -48,7 +49,7 @@ public class TestSenderAgent extends Agent{
 					
 			// Send message to Master agent (hard-coded)   
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);  
-			msg.setPerformative(constraint);         
+			msg.setPerformative(da1.weight_capacity);         
 		    msg.addReceiver(new AID("MasterAgent", AID.ISLOCALNAME) );                   
 			// Send Message (only once)       
 			System.out.println(getLocalName()+ ": I can carry up to " + msg.getPerformative() + " kilograms of packages ");     

@@ -38,8 +38,8 @@ public static BoolVar[] getColumn(BoolVar[][] array, int index){
     return column;
 }
 */
-	public static BoolVar[] getColumn(BoolVar[][] array, int index) {
-		BoolVar[]column = new BoolVar[array[0].length];
+	public static BoolVar[] getColumn(BoolVar[][] array, int index, int length) {
+		BoolVar[]column = new BoolVar[length];
 		for(int i = 0; i <column.length;i++) {
 			column [i] = array[i][index];
 		}
@@ -50,21 +50,32 @@ public static BoolVar[] getColumn(BoolVar[][] array, int index){
 		Model m = new Model ("Assigning trucks to Locations");
 int loc = 15;
 int trucks = 3;
+IntVar trucksParcels = m.intVar("P", new int[] {3, 5, 8});
+IntVar parcelsNeeded = m.intVar("Loc", 1, 5);
 
 BoolVar[][] TruckLocation = m.boolVarMatrix(loc,trucks);
 
 for(int i = 0; i< loc;i++) {
 	//ensuring each location gets only one car
+	//m.arithm(trucksParcels, ">=", parcelsNeeded).post();
 	m.sum(TruckLocation[i], "=", 1).post();
 }
 for(int j = 0; j<trucks;j++) {
-	//ensuring each truck can carry at most 5 parcels
-	m.sum((getColumn(TruckLocation, j)), "<", 6).post();
+	int locVisited = 0;
+	int P = trucksParcels.getValue();
+	while(P > 0) {
+		locVisited++;
+		P -= parcelsNeeded.getValue();
+	}
+	
+	m.arithm(trucksParcels, "-", parcelsNeeded, ">=", 0).post();
+	m.sum((getColumn(TruckLocation, j, locVisited)), "<=", locVisited).post();
 }
 
-m.getSolver().solve();
 
-
+while(m.getSolver().solve()) {
+	
+System.out.println("Solution:");
 for(int i =0; i<loc; i++) {
 	for (int j = 0; j<trucks; j++) {
 		//System.out.println(Trucks[i]);
@@ -74,7 +85,7 @@ for(int i =0; i<loc; i++) {
 	}
 	System.out.println();
 }
-
+}
 	}
 
 }
