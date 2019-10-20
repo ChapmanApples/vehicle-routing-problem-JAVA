@@ -19,46 +19,14 @@ public class MasterRoutingAgent extends Agent{
 	int weight;
 	int totalWeight = 30;
 	Node location;
-	RoutingWorld world = new RoutingWorld(); 
+	RoutingWorld world = new RoutingWorld();
 	ArrayList<Node> locations = new ArrayList<Node>();
 	ArrayList<Package> package_list = new ArrayList<Package>();
+	ArrayList<Truck> trucks = new ArrayList<Truck>();
 	
 	protected void setup() {
-		world.BuildWorld();
-		System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
-		String again = "yes";
-		Scanner input = new Scanner(System.in);
 		
-		while(again.contains("yes")) {
-			
-			System.out.println("Enter location number to recieve packages: ");
-			loc_numb = input.nextInt();
-			for(Node a: locations) {
-				if(a.ID == loc_numb) {
-					location = a;
-				}
-			}
-			
-			System.out.println("Enter number of packages to be delivered: ");
-			packages = input.nextInt();
-			
-			System.out.println("Enter weight for each package in kg: ");
-			weight = input.nextInt();
-			
-			int total_weight = weight * packages;
-			System.out.println("Total weight: " + total_weight);
-			
-			Package parcel = new Package(location, total_weight);
-			package_list.add(parcel);
-			System.out.println("Your packages have been added to a delivery truck!");
-			
-			System.out.println("Do you wish to deliver to another location? (yes/no)");
-			again = input.next().toLowerCase(); 
-		}
-		
-		input.close();
-		
-		
+		world.BuildWorld();		
 		AMSAgentDescription [] agents = null;        
 		try {             
 			SearchConstraints c = new SearchConstraints();             
@@ -70,9 +38,10 @@ public class MasterRoutingAgent extends Agent{
 				e.printStackTrace();   
 				} 
 			
-			AID da1 = getAID("DeliveryAgent1");
-			AID da2 = getAID("DeliveryAgent2");
-			AID da3 = getAID("DeliveryAgent3");
+			AID da1 = getAID("DA1");
+			AID da2 = getAID("DA2");
+			AID da3 = getAID("DA3");
+			
 			for (int i=0; i<agents.length;i++)   {    
 				AID agentID = agents[i].getName(); 
 				if(agentID.equals(da1) || agentID.equals(da2) || agentID.equals(da3)) {
@@ -93,31 +62,68 @@ public class MasterRoutingAgent extends Agent{
 				for(int i = 0; i < agentCount; i++) {	
 				ACLMessage msg= receive();     
 				if (msg!=null) {      
-					// Print out message content
-					//if(msg.getContent().contains("?")) {
-						//System.out.println("Calculating Route...");
-						//Call CHOCO function
-					//}
-					//else {
-						System.out.println(getLocalName()+ ": Received Capacity Constraints: " + msg.getSender().getLocalName() + " can carry " + msg.getPerformative() 
-						+ " parcels");
-					//}      
+						System.out.println(getLocalName()+ ": Received Capacity Constraints: " + msg.getSender().getLocalName() + " can carry up to " + msg.getPerformative() 
+						+ " kg of parcels");     
 				}  
+				System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
+				
+				String again = "yes";
+				Scanner input = new Scanner(System.in);
+				Truck DA1 = new Truck("DeliveryAgent1");
+				trucks.add(DA1);
+				Truck current_truck = trucks.get(0);
+				
+				while(again.contains("yes")) {
+					int t = 0;
+					System.out.println("Enter location number to recieve packages: ");
+					loc_numb = input.nextInt();
+					
+					for(Node a: locations) {
+						if(a.ID == loc_numb) {
+							location = a;
+						}
+					}
+					
+					System.out.println("Enter number of packages to be delivered: ");
+					packages = input.nextInt();
+					
+					System.out.println("Enter weight for each package in kg: ");
+					weight = input.nextInt();
+					
+					int total_weight = weight * packages;
+					System.out.println("Total weight: " + total_weight);
+					
+					Package parcel = new Package(location, total_weight);
+					package_list.add(parcel);
+					
+					if(parcel.weight <= current_truck.weight_capacity) {
+						current_truck.locations[0] = parcel.location;
+						current_truck.holding_capacity = parcel.weight;
+						current_truck.weight_capacity -= parcel.weight;
+						System.out.println("Your packages have been added to a delivery truck!");
+					}else {
+						
+					}
+					
+					System.out.println("Do you wish to deliver to another location? (yes/no)");
+					
+					again = input.next().toLowerCase(); 
+				}
+				
+				input.close();
 				locations = world.TellMeLocations();
 				System.out.println("There are: " + locations.size() + " Locations");
 				System.out.println("There are: " + packages + " parcels");
-				Node dest = new Node("default", 0, 0, 0, 0);
 				
-				for(Node a : locations) {
-					if(a.parcels < msg.getPerformative() ) {
-						dest = a;
-						System.out.println(getLocalName() + ": Sending " + msg.getSender().getLocalName() + " to " + a.name + " with "
-					+ a.parcels + " parcels to be delivered");
-						break;
+				for(Package p : package_list) {
+					if(p.weight < msg.getPerformative() ) {
+						
+						System.out.println(getLocalName() + ": Sending " + msg.getSender().getLocalName() + " to " + p.location.name + " with "
+								+ packages + " parcels to be delivered");
 					}
 				}
 				ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
-				msg_pos.setContent(dest.name);
+				msg_pos.setContent();
 				msg_pos.addReceiver(new AID(msg.getSender().getLocalName(), AID.ISLOCALNAME) );	  
 				send(msg_pos);
 				}
