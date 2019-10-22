@@ -51,8 +51,8 @@ public class Location_Assign {
 	
 		
 		Truck_l truck1 = new Truck_l(1,15);
-		Truck_l truck2 = new Truck_l(1,10);
-		Truck_l truck3 = new Truck_l(1,25);
+		Truck_l truck2 = new Truck_l(2,10);
+		Truck_l truck3 = new Truck_l(3,25);
 		System.out.println();
 		for(int s:location_optimized) {
 			System.out.print(s+" ");
@@ -147,10 +147,10 @@ public class Location_Assign {
 		Truck1 = findA.run();
 		
 		Optimum_pathfinder findB = new Optimum_pathfinder(Truck2);
-		Truck1 = findB.run();
+		Truck2 = findB.run();
 		
 		Optimum_pathfinder findC = new Optimum_pathfinder(Truck3);
-		Truck1 = findC.run();
+		Truck3 = findC.run();
 		
 		Total_running_sum = optimize.getSum(Truck1)+optimize.getSum(Truck2)+optimize.getSum(Truck3);
 		
