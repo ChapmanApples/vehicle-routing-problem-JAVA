@@ -102,17 +102,17 @@ public class Optimum_pathfinder {
 	      }
 		      
 	      
-	      System.out.println("Parent 1");
-	      for(int arr:Parent1) {
-	    	  System.out.print(arr);
-	      }
-	      System.out.println();
-	      System.out.println("Parent 2");
-	       
-	      for(int arr:Parent2) {
-	    	  System.out.print(arr);
-	      }
-	      System.out.println();
+//	      System.out.println("Parent 1");
+//	      for(int arr:Parent1) {
+//	    	  System.out.print(arr);
+//	      }
+//	      System.out.println();
+//	      System.out.println("Parent 2");
+//	       
+//	      for(int arr:Parent2) {
+//	    	  System.out.print(arr);
+//	      }
+//	      System.out.println();
 	      childmethod newmethod = new childmethod(Parent1,Parent2);
 	      
 	      int[] final_parent= newmethod.childrun();
