@@ -1,5 +1,6 @@
 package RoutingAgents;
 
+import genetic_algorithm.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,10 +16,12 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
 public class MasterRoutingAgent extends Agent{
 	int agentCount = 0;
 	int loc_numb;
+	//List<int> all_loc = new List<int>();
 	int packages;
 	int weight;
 	int totalWeight = 30;
 	Node location;
+	Location_Assign search; 
 	RoutingWorld world = new RoutingWorld();
 	ArrayList<Node> locations = new ArrayList<Node>();
 	ArrayList<Package> package_list = new ArrayList<Package>();
@@ -78,6 +81,11 @@ public class MasterRoutingAgent extends Agent{
 				while(again.contains("yes")) {
 					System.out.println("Enter location number to recieve packages: ");
 					loc_numb = input.nextInt();
+					for(Package p : package_list) {
+						if(p.location.ID == loc_numb) {
+							System.out.println("You have already chosen this location!");
+						}
+					}
 					
 					for(Node a: locations) {
 						if(a.ID == loc_numb) {
@@ -119,6 +127,8 @@ public class MasterRoutingAgent extends Agent{
 				locations = world.TellMeLocations();
 				System.out.println("There are: " + locations.size() + " Locations");
 				System.out.println("There are: " + packages + " parcels");
+				
+				
 				
 				for(Package p : package_list) {
 					if(p.weight < msg.getPerformative() ) {

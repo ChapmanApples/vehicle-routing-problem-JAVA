@@ -5,9 +5,13 @@ import java.util.List;
 
 public class Location_Assign {
 	
-	private static int location[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
 	private static int location_optimized[]  = {};
 	private static int Total_Sum=999999999;
+	
+	public Location_Assign(int[] locations) {
+		
+	}
+	
 	
 	
 //	public Location_Assign(int[] loc1, int[] loc2, int[] loc3) {
