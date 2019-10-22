@@ -6,8 +6,8 @@ public class Node {
 	public int x_pos;
 	public int y_pos;
 	public int weight;
-	
-	
+
+
 	public Node(String Name, int id, int Weight, int X_pos, int Y_pos) {
 		name = Name;
 		ID = id;
@@ -15,5 +15,5 @@ public class Node {
 		x_pos = X_pos;
 		y_pos = Y_pos;
 	}
-	
+
 }

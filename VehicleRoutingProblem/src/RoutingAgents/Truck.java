@@ -6,8 +6,8 @@ public class Truck {
 	public int TruckID;
 	public int weight_capacity = 10;
 	public ArrayList <Node> Locations;
-	
-	
+
+
 	public Truck(int ID,int w) {
 		TruckID = ID;
 		w = weight_capacity;
@@ -19,5 +19,5 @@ public class Truck {
 		weight_capacity = weight_capacity-aN.weight;
 	}
 
-	
+
 }
