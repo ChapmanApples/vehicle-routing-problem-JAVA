@@ -10,28 +10,29 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 
 @SuppressWarnings("serial")
-public class DeliveryAgent1 extends Agent{
+public class DeliveryAgent2 extends Agent{
 	
 	//public int constraint = (int)(Math.random() * 20 + 5);
 	RoutingWorld world = new RoutingWorld(); 
 	ArrayList<Node> locations = new ArrayList<Node>();
-	Truck da1 = new Truck(1, 5);
+	Truck da2 = new Truck(2, 10);
 	
 	protected void setup() {
 		world.BuildWorld();
 		// First set-up message receiving behavior      
 		CyclicBehaviour messageListeningBehaviour = new CyclicBehaviour(this)    
 		{ 
-			public void action() {     		
+			public void action() {     
 				ACLMessage msg= receive();   
 				if (msg!=null) {   
 					System.out.println("Recieved Route");
 					try {
-						Truck da1 = ((Truck)msg.getContentObject());
+						Truck da2 = ((Truck)msg.getContentObject());
 						System.out.println(getLocalName()+": Going to locations: ");
-						for(Node l: da1.Locations) {
+						for(Node l: da2.Locations) {
 							System.out.println(l.ID);
-						}		
+						}
+						
 					} catch (UnreadableException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -45,13 +46,12 @@ public class DeliveryAgent1 extends Agent{
 					
 			// Send message to Master agent (hard-coded)   
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);  
-			//msg.setPerformative(da1.weight_capacity);  
 			try {
-				msg.setContentObject(da1);
+				msg.setContentObject(da2);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}         
 		    msg.addReceiver(new AID("MasterAgent", AID.ISLOCALNAME) );                   
 			// Send Message (only once)       
 			try {

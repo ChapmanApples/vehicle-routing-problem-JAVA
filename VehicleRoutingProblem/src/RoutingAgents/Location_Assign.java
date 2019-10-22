@@ -1,4 +1,4 @@
-package genetic_algorithm;
+package RoutingAgents;
 import java.util.ArrayList;
 import RoutingAgents.*;
 import java.util.Arrays;
@@ -9,10 +9,7 @@ public class Location_Assign {
 
 	private static int location_optimized[]  = {};
 	private static int Total_Sum=999999999;
-	Node[] Selected_Locations = new Node[16];
-	public Location_Assign(Node[] x) {
-		x = this.Selected_Locations;
-	}
+	//Node[] Selected_Locations = new Node[16];
 
 //	public Location_Assign(int[] loc1, int[] loc2, int[] loc3) {
 //		Truck1 = loc1;
@@ -33,9 +30,9 @@ public class Location_Assign {
 //	}
 
 
-	public ArrayList run(){
+public ArrayList<Truck> run(ArrayList<Truck> a, Node[] Selected_Locations){
 		List<Node> Selected_Locations_List = new ArrayList<Node>();
-List<Integer> Location = new ArrayList<Integer>();
+		List<Integer> Location = new ArrayList<Integer>();
 
 		for(Node i:Selected_Locations) {
 			Location.add(i.ID);
@@ -44,11 +41,10 @@ List<Integer> Location = new ArrayList<Integer>();
 		int[] Location_array =Location.stream().mapToInt(i->i).toArray();
 		Optimum_pathfinder optimize = new Optimum_pathfinder(Location_array);
 		location_optimized = optimize.run();
-
-
-		Truck truck1 = new Truck(1,5);
-		Truck truck2 = new Truck(2,10);
-		Truck truck3 = new Truck(3,15);
+		
+		Truck truck1 = a.get(0);
+		Truck truck2 = a.get(1);
+		Truck truck3 = a.get(2);
 
 		System.out.println("Initial Optimized array");
 		for(int s:location_optimized) {
@@ -118,7 +114,7 @@ List<Integer> Location = new ArrayList<Integer>();
 		int Total_running_sum=0;
 		Total_running_sum = optimize.getSum(Truck1)+optimize.getSum(Truck2)+optimize.getSum(Truck3);
 		System.out.println("Total:" +Total_running_sum);
-for(i=0;i<2000;i++) {
+		for(i=0;i<2000;i++) {
 
 
 			Total_running_sum = optimize.getSum(Truck1)+optimize.getSum(Truck2)+optimize.getSum(Truck3);
@@ -160,12 +156,18 @@ for(i=0;i<2000;i++) {
 		}
 		System.out.println();
 		System.out.println("Total:"+Total_Sum);
-		ArrayList ListOfTrucks = new ArrayList();
-		ListOfTrucks.add(Truck1);
-		ListOfTrucks.add(Truck2);
-		ListOfTrucks.add(Truck2);
+		truck1.getLocations(Truck1, Selected_Locations);
+		truck2.getLocations(Truck2, Selected_Locations);
+		truck3.getLocations(Truck3, Selected_Locations);
+		
+		ArrayList<Truck> ListOfTrucks = new ArrayList<Truck>();
+		ListOfTrucks.add(truck1);
+		ListOfTrucks.add(truck2);
+		ListOfTrucks.add(truck3);
+		
+		
 
-
+		
 		return ListOfTrucks;
 
 	}

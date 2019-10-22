@@ -1,7 +1,8 @@
 package RoutingAgents;
 
-import genetic_algorithm.*;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import jade.core.AID;
@@ -9,6 +10,7 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.AMSService;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 
@@ -20,12 +22,14 @@ public class MasterRoutingAgent extends Agent{
 	int packages;
 	int weight;
 	int totalWeight = 30;
-	Node location;
-	Location_Assign search; 
+	Node location; 
 	RoutingWorld world = new RoutingWorld();
 	ArrayList<Node> locations = new ArrayList<Node>();
+	Node[] Selected_Locations = {new Node(1,2), new Node(2,3), new Node(3,2), new Node(4,1), new Node(5,1), new Node(6,3),new Node(7,2),new Node(8,2),new Node(9,2),new Node(10,2),new Node(11,2),new Node(12,2),new Node(13,2),new Node(14,2),new Node(15,2)};
+	Location_Assign search = new Location_Assign();
 	ArrayList<Package> package_list = new ArrayList<Package>();
-	ArrayList<Truck> trucks = new ArrayList<Truck>();
+	public ArrayList<Truck> trucks = new ArrayList<Truck>();
+	ArrayList<Truck> assigned_trucks = new ArrayList<Truck>();
 	
 	protected void setup() {
 		
@@ -65,71 +69,36 @@ public class MasterRoutingAgent extends Agent{
 				for(int i = 0; i < agentCount; i++) {	
 				ACLMessage msg= receive();     
 				if (msg!=null) {      
-						System.out.println(getLocalName()+ ": Received Capacity Constraints: " + msg.getSender().getLocalName() + " can carry up to " + msg.getPerformative() 
-						+ " kg of parcels");     
+						try {
+							System.out.println(getLocalName()+ ": Received Capacity Constraints: " + msg.getSender().getLocalName() + " can carry up to " + ((Truck)msg.getContentObject()).weight_capacity 
+							+ " kg of parcels");
+							trucks.add((Truck)msg.getContentObject());
+						} catch (UnreadableException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}     
 				}  
-				System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
 				
-				String again = "yes";
-				Scanner input = new Scanner(System.in);
-				Truck DA1 = new Truck("DeliveryAgent1");
-				trucks.add(DA1);
-				int maximum_weight = 30;
-				int current_weight = 0;
-				//Truck current_truck = trucks.get(0);
-				
-				while(again.contains("yes")) {
-					System.out.println("Enter location number to recieve packages: ");
-					loc_numb = input.nextInt();
-					for(Package p : package_list) {
-						if(p.location.ID == loc_numb) {
-							System.out.println("You have already chosen this location!");
-						}
-					}
-					
-					for(Node a: locations) {
-						if(a.ID == loc_numb) {
-							location = a;
-						}
-					}
-					
-					System.out.println("Enter number of packages to be delivered: ");
-					packages = input.nextInt();
-					
-					System.out.println("Enter weight for each package in kg: ");
-					weight = input.nextInt();
-					
-					int package_weight = weight * packages;
-					current_weight += package_weight;
-					if(current_weight > maximum_weight) {
-						System.out.println("We can't deliver these packages!");
-					}
-					System.out.println("Total weight: " + current_weight);
-					
-					Package parcel = new Package(location, package_weight);
-					package_list.add(parcel);
-					
-					//if(parcel.weight <= current_truck.weight_capacity) {
-					//current_truck.locations.add(parcel.location);
-					//	current_truck.holding_capacity = parcel.weight;
-					//	current_truck.weight_capacity -= parcel.weight;
-					System.out.println("Your order has been added!");
-					//}else {
-						
-					//}
-					
-					System.out.println("Do you wish to deliver to another location? (yes/no)");
-					
-					again = input.next().toLowerCase(); 
+				for(Truck t: trucks) {
+					System.out.println(t.weight_capacity);
 				}
+				if(trucks.size() == 3) {
+					System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
+					assigned_trucks = search.run(trucks, Selected_Locations);
+					
+					
+					for(Truck t: assigned_trucks) {
+						System.out.println(t.TruckID);
+					}
 				
-				input.close();
+				
 				locations = world.TellMeLocations();
 				System.out.println("There are: " + locations.size() + " Locations");
-				System.out.println("There are: " + packages + " parcels");
+				//System.out.println("There are: " + packages + " parcels");
 				
 				
 				
+				/*
 				for(Package p : package_list) {
 					if(p.weight < msg.getPerformative() ) {
 						
@@ -137,10 +106,53 @@ public class MasterRoutingAgent extends Agent{
 								+ packages + " parcels to be delivered");
 					}
 				}
-				//ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
-				//msg_pos.setContent();
-				//msg_pos.addReceiver(new AID(msg.getSender().getLocalName(), AID.ISLOCALNAME) );	  
-				//send(msg_pos);
+				*/
+				
+				for(Truck t: assigned_trucks) {
+					if(t.TruckID == 1) {
+						ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
+						try {
+							msg_pos.setContentObject(t);						
+							System.out.println("Sending route to DA1");
+							for(Node l: t.Locations) {
+								System.out.println(l.ID);
+							}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						msg_pos.addReceiver(new AID("DA1", AID.ISLOCALNAME) );	  
+						send(msg_pos);
+						}
+					
+					if(t.TruckID == 2) {
+						ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
+						try {
+							msg_pos.setContentObject(t);						
+							System.out.println("Sending route to DA2");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						msg_pos.addReceiver(new AID("DA2", AID.ISLOCALNAME) );	  
+						send(msg_pos);
+						}
+					if(t.TruckID == 3) {
+						ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
+						try {
+							msg_pos.setContentObject(t);						
+							System.out.println("Sending route to DA3");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						msg_pos.addReceiver(new AID("DA3", AID.ISLOCALNAME) );	  
+						send(msg_pos);
+						}
+					
+					}
+				}
+					
 				}
 				// Continue listening //    
 				block();  
