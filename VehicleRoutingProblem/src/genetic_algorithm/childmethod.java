@@ -18,7 +18,7 @@ public class childmethod {
 	public int[] childrun() {
 		Parentret = Parent1;
 		
-		for(int i=0;i<25;i++) {
+		for(int i=0;i<2000;i++) {
 			int[][] Parentreturn = run(Parent1,Parent2);
 			Parent1 = Parentreturn[0];
 			Parent2 = Parentreturn[1];
