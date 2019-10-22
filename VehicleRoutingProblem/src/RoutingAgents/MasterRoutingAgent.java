@@ -71,10 +71,11 @@ public class MasterRoutingAgent extends Agent{
 				Scanner input = new Scanner(System.in);
 				Truck DA1 = new Truck("DeliveryAgent1");
 				trucks.add(DA1);
-				Truck current_truck = trucks.get(0);
+				int maximum_weight = 30;
+				int current_weight = 0;
+				//Truck current_truck = trucks.get(0);
 				
 				while(again.contains("yes")) {
-					int t = 0;
 					System.out.println("Enter location number to recieve packages: ");
 					loc_numb = input.nextInt();
 					
@@ -90,20 +91,24 @@ public class MasterRoutingAgent extends Agent{
 					System.out.println("Enter weight for each package in kg: ");
 					weight = input.nextInt();
 					
-					int total_weight = weight * packages;
-					System.out.println("Total weight: " + total_weight);
+					int package_weight = weight * packages;
+					current_weight += package_weight;
+					if(current_weight > maximum_weight) {
+						System.out.println("We can't deliver these packages!");
+					}
+					System.out.println("Total weight: " + current_weight);
 					
-					Package parcel = new Package(location, total_weight);
+					Package parcel = new Package(location, package_weight);
 					package_list.add(parcel);
 					
-					if(parcel.weight <= current_truck.weight_capacity) {
-						current_truck.locations[0] = parcel.location;
-						current_truck.holding_capacity = parcel.weight;
-						current_truck.weight_capacity -= parcel.weight;
-						System.out.println("Your packages have been added to a delivery truck!");
-					}else {
+					//if(parcel.weight <= current_truck.weight_capacity) {
+					//current_truck.locations.add(parcel.location);
+					//	current_truck.holding_capacity = parcel.weight;
+					//	current_truck.weight_capacity -= parcel.weight;
+					System.out.println("Your order has been added!");
+					//}else {
 						
-					}
+					//}
 					
 					System.out.println("Do you wish to deliver to another location? (yes/no)");
 					
@@ -122,10 +127,10 @@ public class MasterRoutingAgent extends Agent{
 								+ packages + " parcels to be delivered");
 					}
 				}
-				ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
-				msg_pos.setContent();
-				msg_pos.addReceiver(new AID(msg.getSender().getLocalName(), AID.ISLOCALNAME) );	  
-				send(msg_pos);
+				//ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
+				//msg_pos.setContent();
+				//msg_pos.addReceiver(new AID(msg.getSender().getLocalName(), AID.ISLOCALNAME) );	  
+				//send(msg_pos);
 				}
 				// Continue listening //    
 				block();  

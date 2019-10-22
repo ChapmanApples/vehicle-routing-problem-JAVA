@@ -70,14 +70,14 @@ public class RoutingWorld {
 			for(int x = 0; x < 100; x++) {				
 				for(int i = 0; i < locationNumber; i++) {
 					if(x == 45 && y == 32) {
-						world[x][y] = new Node("Depot", 17, 0, x, y);
+						world[x][y] = new Node("Depot", 0, 0, x, y);
 					}
 					else if(x == loc_x[i] && y == loc_y[i]) {
 						world[x][y] = new Node("Location " + i, i, (int)(Math.random() * 6 + 1), x, y);
 					}
 				}
 				if(world[x][y] == null) {
-					world[x][y] = new Node("Space", 0, 0, x, y);
+					world[x][y] = new Node("Space", 17, 0, x, y);
 				}
 			}
 		}
