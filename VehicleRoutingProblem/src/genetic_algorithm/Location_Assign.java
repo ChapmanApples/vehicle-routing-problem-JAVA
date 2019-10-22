@@ -9,6 +9,41 @@ public class Location_Assign {
 	private static int location_optimized[]  = {};
 	private static int Total_Sum=999999999;
 	
+	public static int[] getLocation() {
+		return location;
+	}
+
+
+
+
+
+	public static void setLocation(int[] location) {
+		Location_Assign.location = location;
+	}
+
+
+
+
+
+	public static int[] getLocation_optimized() {
+		return location_optimized;
+	}
+
+
+
+
+
+	public static void setLocation_optimized(int[] location_optimized) {
+		Location_Assign.location_optimized = location_optimized;
+	}
+
+
+
+
+	
+	
+	
+	
 	
 //	public Location_Assign(int[] loc1, int[] loc2, int[] loc3) {
 //		Truck1 = loc1;
