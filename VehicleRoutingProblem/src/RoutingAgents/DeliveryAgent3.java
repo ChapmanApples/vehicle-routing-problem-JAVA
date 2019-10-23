@@ -30,7 +30,7 @@ public class DeliveryAgent3 extends Agent{
 						Truck da3 = ((Truck)msg.getContentObject());
 						System.out.println(getLocalName()+": Going to locations: ");
 						for(Node l: da3.Locations) {
-							System.out.println(l.ID);
+							System.out.print(l.ID + " ");
 						}
 						
 					} catch (UnreadableException e) {
