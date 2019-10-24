@@ -12,27 +12,23 @@ import jade.lang.acl.UnreadableException;
 @SuppressWarnings("serial")
 public class DeliveryAgent2 extends Agent{
 	
-	//public int constraint = (int)(Math.random() * 20 + 5);
-	RoutingWorld world = new RoutingWorld(); 
-	ArrayList<Node> locations = new ArrayList<Node>();
 	Truck da2 = new Truck(2, 10);
 	
 	protected void setup() {
-		world.BuildWorld();
 		// First set-up message receiving behavior      
 		CyclicBehaviour messageListeningBehaviour = new CyclicBehaviour(this)    
 		{ 
 			public void action() {     
 				ACLMessage msg= receive();   
 				if (msg!=null) {   
-					System.out.println("Recieved Route");
+					System.out.println(getLocalName()+": Recieved Route");
 					try {
 						Truck da2 = ((Truck)msg.getContentObject());
 						System.out.println(getLocalName()+": Going to locations: ");
 						for(Node l: da2.Locations) {
-							System.out.println(l.ID);
+							System.out.print(l.ID + " ");
 						}
-						
+						System.out.println();
 					} catch (UnreadableException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

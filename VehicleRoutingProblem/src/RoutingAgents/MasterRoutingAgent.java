@@ -18,14 +18,9 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
 public class MasterRoutingAgent extends Agent{
 	int agentCount = 0;
 	int loc_numb;
-	//List<int> all_loc = new List<int>();
-	int packages;
-	int weight;
-	int totalWeight = 30;
-	Node location; 
 	RoutingWorld world = new RoutingWorld();
 	ArrayList<Node> locations = new ArrayList<Node>();
-	Node[] Selected_Locations = {new Node(1,2), new Node(2,3), new Node(3,2), new Node(4,1), new Node(5,1), new Node(6,3),new Node(7,2),new Node(8,2),new Node(9,2),new Node(10,2),new Node(11,2),new Node(12,2),new Node(13,2),new Node(14,2),new Node(15,2)};
+	Node[] Selected_Locations = {new Node(1,2), new Node(2,3), new Node(3,2), new Node(4,1), new Node(5,1), new Node(6,3),new Node(7,2),new Node(8,2),new Node(9,2),new Node(10,2)};
 	Location_Assign search = new Location_Assign();
 	ArrayList<Package> package_list = new ArrayList<Package>();
 	public ArrayList<Truck> trucks = new ArrayList<Truck>();
@@ -83,40 +78,56 @@ public class MasterRoutingAgent extends Agent{
 					System.out.println(t.weight_capacity);
 				}
 				if(trucks.size() == 3) {
+					for(int n = 0; n < trucks.size(); n++) {
+						Truck not_first;
+						Truck not_second;
+						if(n == 0) {
+							while(trucks.get(n).TruckID != 1) {
+								not_first = trucks.get(n);
+								trucks.remove(n);
+								trucks.add(not_first);
+							}
+						}
+						if(n == 1) {
+							while(trucks.get(n).TruckID != 2) {
+								not_second = trucks.get(n);
+								trucks.remove(not_second);
+								trucks.add(not_second);
+							}
+						}
+						if(n == 2) {
+							System.out.println(getLocalName()+ ": Recieved all capcity constraints");
+						}
+					}
 					System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
 					assigned_trucks = search.run(trucks, Selected_Locations);
-					
+				
 					
 					for(Truck t: assigned_trucks) {
 						System.out.println(t.TruckID);
+						loc_numb += t.Locations.size();
 					}
 				
 				
 				locations = world.TellMeLocations();
-				System.out.println("There are: " + locations.size() + " Locations");
-				//System.out.println("There are: " + packages + " parcels");
+				System.out.println("There are: " + loc_numb + " Locations");
 				
-				
-				
-				/*
-				for(Package p : package_list) {
-					if(p.weight < msg.getPerformative() ) {
-						
-						System.out.println(getLocalName() + ": Sending " + msg.getSender().getLocalName() + " to " + p.location.name + " with "
-								+ packages + " parcels to be delivered");
-					}
-				}
-				*/
 				
 				for(Truck t: assigned_trucks) {
 					if(t.TruckID == 1) {
 						ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
 						try {
-							msg_pos.setContentObject(t);						
-							System.out.println("Sending route to DA1");
+							msg_pos.setContentObject(t);
+							String da1_route = "(";
 							for(Node l: t.Locations) {
-								System.out.println(l.ID);
+								if(l == t.Locations.get(t.Locations.size() - 1)) {
+									da1_route += l.ID;
+								}
+								else {
+									da1_route += l.ID + ", ";
+								}
 							}
+							System.out.println("Sending route: " + da1_route + ") to DA1");
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -129,7 +140,16 @@ public class MasterRoutingAgent extends Agent{
 						ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
 						try {
 							msg_pos.setContentObject(t);						
-							System.out.println("Sending route to DA2");
+							String da2_route = "(";
+							for(Node l: t.Locations) {
+								if(l == t.Locations.get(t.Locations.size() - 1)) {
+									da2_route += l.ID;
+								}
+								else {
+									da2_route += l.ID + ", ";
+								}
+							}
+							System.out.println("Sending route: " + da2_route + ") to DA2");
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -141,7 +161,16 @@ public class MasterRoutingAgent extends Agent{
 						ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
 						try {
 							msg_pos.setContentObject(t);						
-							System.out.println("Sending route to DA3");
+							String da3_route = "(";
+							for(Node l: t.Locations) {
+								if(l == t.Locations.get(t.Locations.size() - 1)) {
+									da3_route += l.ID;
+								}
+								else {
+									da3_route += l.ID + ", ";
+								}
+							}
+							System.out.println("Sending route: " + da3_route + ") to DA3");
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
