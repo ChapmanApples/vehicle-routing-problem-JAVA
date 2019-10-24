@@ -15,16 +15,21 @@ import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 
 @SuppressWarnings("serial")
-public class MasterRoutingAgent extends Agent{
+public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 	int agentCount = 0;
 	int loc_numb;
 	RoutingWorld world = new RoutingWorld();
 	ArrayList<Node> locations = new ArrayList<Node>();
-	Node[] Selected_Locations = {new Node(1,2), new Node(2,3), new Node(3,2), new Node(4,1), new Node(5,1), new Node(6,3),new Node(7,2),new Node(8,2),new Node(9,2),new Node(10,2)};
+	public Node[] Selected_Locations;
 	Location_Assign search = new Location_Assign();
 	ArrayList<Package> package_list = new ArrayList<Package>();
 	public ArrayList<Truck> trucks = new ArrayList<Truck>();
 	ArrayList<Truck> assigned_trucks = new ArrayList<Truck>();
+	
+	public MasterRoutingAgent() {
+		registerO2AInterface(MyAgentInterface.class, this);
+		
+	}
 	
 	protected void setup() {
 		
@@ -61,6 +66,7 @@ public class MasterRoutingAgent extends Agent{
 			CyclicBehaviour msgReceivingBehaviour =  (new CyclicBehaviour(this)    {  
 			public void action() {       
 				System.out.println(getLocalName() + ": Waiting for Capacity Constraints");  
+				System.out.println(agentCount);
 				for(int i = 0; i < agentCount; i++) {	
 				ACLMessage msg= receive();     
 				if (msg!=null) {      
@@ -98,6 +104,9 @@ public class MasterRoutingAgent extends Agent{
 						if(n == 2) {
 							System.out.println(getLocalName()+ ": Recieved all capcity constraints");
 						}
+					}
+					for(Node n: Selected_Locations) {
+						System.out.println(n.ID);
 					}
 					System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
 					assigned_trucks = search.run(trucks, Selected_Locations);
@@ -191,5 +200,24 @@ public class MasterRoutingAgent extends Agent{
 			
 			addBehaviour(msgReceivingBehaviour);
 	}
+
+	@Override
+	public void recieveLocations(Node[] loc_list) {	
+		System.out.println("Got Locations");
+		Selected_Locations = loc_list;
+		
+	}
+	
+	public ArrayList<Truck> sendLocations(){
+		return assigned_trucks;
+		
+	}
+
+	
+}
+
+interface MyAgentInterface {
+	public void recieveLocations(Node[] loc_list);
+	public ArrayList<Truck> sendLocations();
 	
 }

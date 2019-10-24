@@ -40,6 +40,11 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import jade.core.Runtime;
+import jade.wrapper.*;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+
 
 
 
@@ -78,7 +83,7 @@ public class GridClass extends Application {
 	}
 	// returns Node Lists
 	public Node[] NodeLists() {
-		Node[] returnarray = new Node[16];
+		Node[] returnarray = new Node[Nodes.size()];
 		int i =0;
 		for(Node n:Nodes) {
 			returnarray[i]= n;
@@ -216,7 +221,7 @@ public class GridClass extends Application {
 	
 	
 	
-	public void inputScreen() {
+	public void inputScreen()  {
 		Stage stage = new Stage();
 		Button btnSource = new Button("Choose Source");
 		Label lblSource = new Label("");
@@ -317,9 +322,54 @@ public class GridClass extends Application {
 //		btnPieChart.setMinWidth(100);
 			
 		
-		Submit.setOnAction( e-> {
-			primaryStage.close();
-			stage.close();
+		Submit.setOnAction( e-> { 
+			//primaryStage.close();
+			//stage.close();
+			Node[] ArrayNode = NodeLists();
+			Runtime rt = Runtime.instance();
+			Profile pMain = new ProfileImpl(null, 8888, null);
+			ContainerController mainCtrl = rt.createMainContainer(pMain);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			AgentController MA;
+			AgentController DA1;
+			AgentController DA2;
+			AgentController DA3;
+			
+			try {
+				MA = mainCtrl.createNewAgent("MasterAgent", MasterRoutingAgent.class.getName(), new Object[0]);
+				DA1 = mainCtrl.createNewAgent("DA1", DeliveryAgent1.class.getName(), new Object[0]);
+				DA2 = mainCtrl.createNewAgent("DA2", DeliveryAgent2.class.getName(), new Object[0]);
+				DA3 = mainCtrl.createNewAgent("DA3", DeliveryAgent3.class.getName(), new Object[0]); 
+				
+				MA.start();
+				System.out.println("jordy");
+				MyAgentInterface o2a = MA.getO2AInterface(MyAgentInterface.class);
+				for(Node n:ArrayNode) {
+					System.out.println(n.ID+" "+n.weight);
+				}
+				o2a.recieveLocations(ArrayNode);
+				DA1.start();
+				DA2.start();
+				DA3.start();
+				
+			} catch (StaleProxyException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
 //			Node[] ArrayNode = NodeLists();
 //			System.out.println("Array Node ");
@@ -327,7 +377,7 @@ public class GridClass extends Application {
 //				System.out.println(Arr.ID+" "+Arr.weight);
 //			}
 			
-		});
+		}) ;
 		
 		
 		
