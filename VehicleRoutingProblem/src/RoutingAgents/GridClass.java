@@ -31,6 +31,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -41,22 +44,61 @@ import javafx.stage.Stage;
 
 
 public class GridClass extends Application {
-	File selectedFile = new File("");
-	List<N_ode> Nodes;
+	public File selectedFile = new File("");
+	public GridPane view ;
+	public List<Node> Nodes;
+	public Stage primaryStage;
+	public Group root;
+	public Scene scene;
+	public Path pathline = new Path();
+	public int[] trialpathlines = {1,2,3,9,8,7,6};
 	
-	public GridClass() {
-		Nodes =new ArrayList<N_ode>();
+	 private static int[][] location = {{456,320},
+				{228,0},
+				{912,0},	//2
+				{0,80},
+				{114,80},
+				{570,160},
+				{798,160},
+				{342,240},	//7
+				{570,400},
+				{912,400},
+				{114,480},
+				{228,480},
+				{342,560},
+				{684,560},
+				{0,640},
+				{798,640}};
+	
+	public GridClass(/*Stage stg*/) {
+		Nodes =new ArrayList<Node>();
+		view= new GridPane();
+		root = new Group();
+		Path pathline = new Path();
 	}
-	
-	public N_ode[] NodeLists() {
-		N_ode[] returnarray = new N_ode[16];
+	// returns Node Lists
+	public Node[] NodeLists() {
+		Node[] returnarray = new Node[16];
 		int i =0;
-		for(N_ode n:Nodes) {
+		for(Node n:Nodes) {
 			returnarray[i]= n;
 			i++;
 		}
 		return returnarray;		
 	}
+	
+	public void stopStage() {
+		primaryStage.close();
+	}
+	
+	public void startStage() {
+		
+		//primaryStage = new Stage();
+		//primaryStage.show();
+		launch();
+	}
+	
+	
 
 
 	public ArrayList<Line> drawLine(int x,int y, int squaresize){
@@ -90,8 +132,9 @@ public class GridClass extends Application {
 
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage stg) throws Exception {
 		// TODO Auto-generated method stub
+		//primaryStage = new Stage();
 		try {
 
 			Group root = new Group();
@@ -103,50 +146,75 @@ public class GridClass extends Application {
 
 			ArrayList<Node> MNode = newworld.TellMeLocations();
 			int l =0;
-			for(Node a : MNode) {
-				l++;
-				Circle circle1 = new Circle(a.x_pos*6+10,a.y_pos*6+10,10);				//shifts origin by 10 units and expands the scale by 6
-				if (a.name=="depot") {
+			int node=0;
+			for(int[] loc:location) {
+				
+				Circle circle1 = new Circle((loc[0]/10)*6+10,(loc[1]/10)*6+10,5);
+				
+				if(node==0) {
+					System.out.println((loc[1]/10)*6+10+" "+((loc[1]/10)*6+10));
 					circle1.setFill(Color.DARKRED);
 				}
-				Label labels = new Label(""+l);
-				labels.setLayoutX(a.x_pos*6+20);
-				labels.setLayoutY(a.y_pos*6+10);
-				root.getChildren().add(labels);
-				root.getChildren().add(circle1);	//scale the size of the maps by 6 ie 1:6 and shift origin by 10 for the values
 				
+				//root.getChildren().add(circle1);
+				Label labels = new Label(""+node);
+				labels.setLayoutX((loc[0]/10)*6+20);
+				labels.setLayoutY((loc[1]/10)*6+10);
+				root.getChildren().add(labels);
+				root.getChildren().add(circle1);
+				node++;
 			}
-
-			Node Depotnode = newworld.Depot();
-			Circle depot = new Circle(Depotnode.x_pos*6+10,Depotnode.y_pos*6+10,10);
-			depot.setFill(Color.DARKGREEN);
-			root.getChildren().add(depot);
-
-			for(int j=0;j<10;j++) {
-				for(int i=0;i<10;i++) {
-					root.getChildren().addAll(drawLine(i*60,j*60, 60));
-
-				}
-			}
+			
+				//view.add(root, 0, 0);
 
 			//sroot.getChildren().add(new Circle(10,10,10));
-		      Scene scene = new Scene(root, 600,600);
-
-		      primaryStage.setTitle("Sample application");
-
-		      //Adding the scene to the stage
-		      primaryStage.setScene(scene);
-
-		      //Displaying the contents of a scene
-		      primaryStage.show();
+		      scene = new Scene(root, 600,600);
+		     
+		      
+//		      
+//		      primaryStage.setTitle("Sample application");
+//
+//		      //Adding the scene to the stage
+//		      primaryStage.setScene(scene);
+//
+//		      //Displaying the contents of a scene
+//		      primaryStage.show();
 		      inputScreen();
-		      
-		      
+		      drawonScreen();
 
 		}catch(Exception e) {
 			System.out.println("Error found in exception: "+e);
 		}
 	}
+	
+	public void drawonScreen() {			//assign a variable for initalization drawonScreen int trialpathlines to draw
+		//pathline = new Path();		
+		MoveTo moveTo = new MoveTo((location[0][0]/10)*6+10,(location[0][1]/10)*6+10);		//start at depot
+		pathline.getElements().add(moveTo);
+		for(int r:trialpathlines) {
+			LineTo line1 = new LineTo((location[r][0]/10)*6+10,(location[r][1]/10)*6+10);
+			pathline.getElements().add(line1);
+		}
+		LineTo endLine = new LineTo((location[0][0]/10)*6+10,(location[0][1]/10)*6+10);		//end at depot
+		pathline.getElements().add(endLine);
+		Group root = (Group) scene.getRoot();		
+		if(!root.getChildren().contains(pathline))
+		{
+			root.getChildren().add(pathline);
+		}
+	
+		
+		
+		scene.setRoot(root);
+	}
+	
+	public void clearPathlines() {
+		Group root = (Group) scene.getRoot();
+		root.getChildren().remove(pathline);
+		scene.setRoot(root);
+	}
+	
+	
 	
 	public void inputScreen() {
 		Stage stage = new Stage();
@@ -170,6 +238,19 @@ public class GridClass extends Application {
 		TextArea txtR = new TextArea();
 		txtR.setText(selectedFile.getName());
 		GridPane grdPane = new GridPane();
+		Button nwBtn = new Button("draw");
+		Button nwBtn2 = new Button("draw2");
+		
+		//pathline = new Path();
+		nwBtn.setOnAction(e->{
+
+			drawonScreen();
+				
+		});
+		
+		nwBtn2.setOnAction(e->{
+			clearPathlines();
+		});
 		
 		grdPane.setPadding(new Insets(10,10,10,10));
 		//grdPane.setMinSize(10, 10);
@@ -180,6 +261,8 @@ public class GridClass extends Application {
 		grdPane.addRow(0,hboxSource);
 		grdPane.addRow(1,hbox);
 		grdPane.addRow(2, txtR);
+		grdPane.addRow(3, nwBtn);
+		grdPane.addRow(4, nwBtn2);
 		
 		btnSearch.setOnAction(e -> {
 			BufferedReader reader = null;
@@ -212,12 +295,12 @@ public class GridClass extends Application {
 						
 						k++;
 					}
-					Nodes.add(new N_ode(j+1,weight));
+					Nodes.add(new Node(j+1,weight));
 				}
 				
 				
-				for(N_ode N:Nodes) {
-					System.out.println(N.id+" "+N.weight);
+				for(Node N:Nodes) {
+					System.out.println(N.ID+" "+N.weight);
 				}
 				
 			}catch(Exception er)
@@ -235,15 +318,18 @@ public class GridClass extends Application {
 			
 		
 		Submit.setOnAction( e-> {
+			primaryStage.close();
+			stage.close();
 			
-			
-			N_ode[] ArrayNode = NodeLists();
-			System.out.println("Array Node ");
-			for(N_ode Arr:NodeLists()) {
-				System.out.println(Arr.id+" "+Arr.weight);
-			}
+//			Node[] ArrayNode = NodeLists();
+//			System.out.println("Array Node ");
+//			for(Node Arr:NodeLists()) {
+//				System.out.println(Arr.ID+" "+Arr.weight);
+//			}
 			
 		});
+		
+		
 		
 		
 		
@@ -258,18 +344,22 @@ public class GridClass extends Application {
 		stage.show();
 		
 	}
+	
+	public void DrawLine() {
+		
+	}
 
 	public static void main(String args[]) {
 
-		RoutingWorld newworld = new RoutingWorld();
-		newworld.BuildWorld();
-		ArrayList<Node> MNode = newworld.TellMeLocations();
-
-		for(Node a : MNode) {
-			System.out.print(a.name);
-			System.out.println(a.x_pos+" "+a.y_pos);
-
-		}
+//		RoutingWorld newworld = new RoutingWorld();
+//		newworld.BuildWorld();
+//		ArrayList<Node> MNode = newworld.TellMeLocations();
+//
+//		for(Node a : MNode) {
+//			System.out.print(a.name);
+//			System.out.println(a.x_pos+" "+a.y_pos);
+//
+//		}
 
 		launch(args);
 	}
@@ -277,29 +367,4 @@ public class GridClass extends Application {
 }
 
 
-class N_ode{
-	
-	public Integer id;
-	public Integer weight;
-	public List<Integer> packageId;
-	
-	public N_ode(Integer id,Integer weight) {
-		this.id = id;
-		this.weight = weight;
-	}
-	
-//	public addpackage(int package) {
-//		
-//	}
-
-}
-
-class xPackage{
-	private int weight;
-	private int NodeId;
-	public xPackage(int weight, int NodeId) {
-		this.weight = weight;
-		this.NodeId = NodeId;
-	}
-}
 
