@@ -43,6 +43,8 @@ import javafx.stage.Stage;
 public class GridClass extends Application {
 	File selectedFile = new File("");
 	List<N_ode> Nodes;
+	MasterRoutingAgent Master = new MasterRoutingAgent();
+	DeliveryAgent1 agent1 = new DeliveryAgent1();
 	
 	public GridClass() {
 		Nodes =new ArrayList<N_ode>();

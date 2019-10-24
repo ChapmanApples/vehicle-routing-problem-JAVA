@@ -18,13 +18,9 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
 public class MasterRoutingAgent extends Agent{
 	int agentCount = 0;
 	int loc_numb;
-	int packages;
-	int weight;
-	int totalWeight = 30;
-	Node location; 
 	RoutingWorld world = new RoutingWorld();
 	ArrayList<Node> locations = new ArrayList<Node>();
-	Node[] Selected_Locations = {new Node(1,2), new Node(2,3), new Node(3,2), new Node(4,1), new Node(5,1), new Node(6,3),new Node(7,2),new Node(8,2),new Node(9,2),new Node(10,2),new Node(11,2),new Node(12,2),new Node(13,2),new Node(14,2),new Node(15,2)};
+	Node[] Selected_Locations = {new Node(1,2), new Node(2,3), new Node(3,2), new Node(4,1), new Node(5,1), new Node(6,3),new Node(7,2),new Node(8,2),new Node(9,2),new Node(10,2)};
 	Location_Assign search = new Location_Assign();
 	ArrayList<Package> package_list = new ArrayList<Package>();
 	public ArrayList<Truck> trucks = new ArrayList<Truck>();
@@ -82,44 +78,30 @@ public class MasterRoutingAgent extends Agent{
 					System.out.println(t.weight_capacity);
 				}
 				if(trucks.size() == 3) {
-					System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
-					assigned_trucks = search.run(trucks, Selected_Locations);
-					
-					/*
-					for(Truck t: assigned_trucks) {
-						if(t.TruckID == 1) {
-							assigned_trucks.set(0, t);							
-						}
-						if(t.TruckID == 2) {
-							assigned_trucks.set(1, t);
-						}
-						if(t.TruckID == 3) {
-							assigned_trucks.set(2, t);
-						}
-					}
-					*/
-					
-					for(int n = 0; n < assigned_trucks.size(); n++) {
+					for(int n = 0; n < trucks.size(); n++) {
 						Truck not_first;
 						Truck not_second;
 						if(n == 0) {
-							while(assigned_trucks.get(n).TruckID != 1) {
-								not_first = assigned_trucks.get(n);
-								assigned_trucks.remove(n);
-								assigned_trucks.add(not_first);
+							while(trucks.get(n).TruckID != 1) {
+								not_first = trucks.get(n);
+								trucks.remove(n);
+								trucks.add(not_first);
 							}
 						}
 						if(n == 1) {
-							while(assigned_trucks.get(n).TruckID != 2) {
-								not_second = assigned_trucks.get(n);
-								assigned_trucks.remove(not_second);
-								assigned_trucks.add(not_second);
+							while(trucks.get(n).TruckID != 2) {
+								not_second = trucks.get(n);
+								trucks.remove(not_second);
+								trucks.add(not_second);
 							}
 						}
 						if(n == 2) {
-							System.out.println("Assigned routes for Trucks: ");
+							System.out.println(getLocalName()+ ": Recieved all capcity constraints");
 						}
 					}
+					System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
+					assigned_trucks = search.run(trucks, Selected_Locations);
+				
 					
 					for(Truck t: assigned_trucks) {
 						System.out.println(t.TruckID);
@@ -129,19 +111,7 @@ public class MasterRoutingAgent extends Agent{
 				
 				locations = world.TellMeLocations();
 				System.out.println("There are: " + loc_numb + " Locations");
-				//System.out.println("There are: " + packages + " parcels");
 				
-				
-				
-				/*
-				for(Package p : package_list) {
-					if(p.weight < msg.getPerformative() ) {
-						
-						System.out.println(getLocalName() + ": Sending " + msg.getSender().getLocalName() + " to " + p.location.name + " with "
-								+ packages + " parcels to be delivered");
-					}
-				}
-				*/
 				
 				for(Truck t: assigned_trucks) {
 					if(t.TruckID == 1) {
