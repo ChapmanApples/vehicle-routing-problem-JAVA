@@ -52,6 +52,7 @@ public class GridClass extends Application {
 	public File selectedFile = new File("");
 	public GridPane view ;
 	public List<Node> Nodes;
+	public ArrayList<Truck> DeliveryAgents;
 	public Stage primaryStage;
 	public Group root;
 	public Scene scene;
@@ -300,9 +301,10 @@ public class GridClass extends Application {
 						
 						k++;
 					}
-					Nodes.add(new Node(j+1,weight));
+					if(weight != 0) {
+						Nodes.add(new Node(j+1,weight));
+					}
 				}
-				
 				
 				for(Node N:Nodes) {
 					System.out.println(N.ID+" "+N.weight);
@@ -324,7 +326,7 @@ public class GridClass extends Application {
 		
 		Submit.setOnAction( e-> { 
 			//primaryStage.close();
-			//stage.close();
+			stage.close();
 			Node[] ArrayNode = NodeLists();
 			Runtime rt = Runtime.instance();
 			Profile pMain = new ProfileImpl(null, 8888, null);
@@ -348,25 +350,36 @@ public class GridClass extends Application {
 				DA2 = mainCtrl.createNewAgent("DA2", DeliveryAgent2.class.getName(), new Object[0]);
 				DA3 = mainCtrl.createNewAgent("DA3", DeliveryAgent3.class.getName(), new Object[0]); 
 				
-				MA.start();
-				System.out.println("jordy");
 				MyAgentInterface o2a = MA.getO2AInterface(MyAgentInterface.class);
 				for(Node n:ArrayNode) {
 					System.out.println(n.ID+" "+n.weight);
 				}
 				o2a.recieveLocations(ArrayNode);
+				
+				MA.start();	
 				DA1.start();
 				DA2.start();
 				DA3.start();
 				
+				
+				try {
+					Thread.sleep(10000);
+					
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				DeliveryAgents = o2a.sendLocations();
+				for(Truck da: DeliveryAgents) {
+					System.out.print("DA" + da.TruckID + ": I'm off! Delivering packages to");
+					for(Node loc: da.Locations) {
+						System.out.print(" Location "+ loc.ID);
+					}
+					System.out.println();
+				}
+				
 			} catch (StaleProxyException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}

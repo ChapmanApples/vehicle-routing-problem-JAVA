@@ -1,7 +1,6 @@
 package RoutingAgents;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator; 
 import jade.core.AID; 
 import jade.core.Agent; 
@@ -24,7 +23,7 @@ public class DeliveryAgent3 extends Agent{
 					System.out.println(getLocalName()+": Recieved Route");
 					try {
 						Truck da3 = ((Truck)msg.getContentObject());
-						System.out.println(getLocalName()+": Going to locations: ");
+						System.out.print(getLocalName()+": Going to locations: ");
 						for(Node l: da3.Locations) {
 							System.out.print(l.ID + " ");
 						}

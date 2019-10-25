@@ -2,9 +2,6 @@ package RoutingAgents;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -17,13 +14,12 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
 @SuppressWarnings("serial")
 public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 	int agentCount = 0;
-	int loc_numb;
 	RoutingWorld world = new RoutingWorld();
 	ArrayList<Node> locations = new ArrayList<Node>();
-	public Node[] Selected_Locations;
+	Node[] Selected_Locations;
 	Location_Assign search = new Location_Assign();
 	ArrayList<Package> package_list = new ArrayList<Package>();
-	public ArrayList<Truck> trucks = new ArrayList<Truck>();
+	ArrayList<Truck> trucks = new ArrayList<Truck>();
 	ArrayList<Truck> assigned_trucks = new ArrayList<Truck>();
 	
 	public MasterRoutingAgent() {
@@ -66,7 +62,7 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 			CyclicBehaviour msgReceivingBehaviour =  (new CyclicBehaviour(this)    {  
 			public void action() {       
 				System.out.println(getLocalName() + ": Waiting for Capacity Constraints");  
-				System.out.println(agentCount);
+				//System.out.println(agentCount);
 				for(int i = 0; i < agentCount; i++) {	
 				ACLMessage msg= receive();     
 				if (msg!=null) {      
@@ -105,21 +101,12 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 							System.out.println(getLocalName()+ ": Recieved all capcity constraints");
 						}
 					}
-					for(Node n: Selected_Locations) {
-						System.out.println(n.ID);
-					}
+
 					System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
 					assigned_trucks = search.run(trucks, Selected_Locations);
 				
-					
-					for(Truck t: assigned_trucks) {
-						System.out.println(t.TruckID);
-						loc_numb += t.Locations.size();
-					}
-				
-				
-				locations = world.TellMeLocations();
-				System.out.println("There are: " + loc_numb + " Locations");
+					locations = world.TellMeLocations();
+					System.out.println("There are: " + Selected_Locations.length + " Locations");
 				
 				
 				for(Truck t: assigned_trucks) {
@@ -143,7 +130,13 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 						}
 						msg_pos.addReceiver(new AID("DA1", AID.ISLOCALNAME) );	  
 						send(msg_pos);
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
+					}
 					
 					if(t.TruckID == 2) {
 						ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
@@ -165,7 +158,13 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 						}
 						msg_pos.addReceiver(new AID("DA2", AID.ISLOCALNAME) );	  
 						send(msg_pos);
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
+					}
 					if(t.TruckID == 3) {
 						ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
 						try {
@@ -186,7 +185,13 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 						}
 						msg_pos.addReceiver(new AID("DA3", AID.ISLOCALNAME) );	  
 						send(msg_pos);
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
+					}
 					
 					}
 				}
@@ -213,11 +218,5 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 		
 	}
 
-	
-}
-
-interface MyAgentInterface {
-	public void recieveLocations(Node[] loc_list);
-	public ArrayList<Truck> sendLocations();
 	
 }
