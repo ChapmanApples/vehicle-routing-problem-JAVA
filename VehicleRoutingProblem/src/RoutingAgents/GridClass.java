@@ -408,7 +408,9 @@ public class GridClass extends Application {
 				}
 				
 				DeliveryAgents = o2a.sendLocations();
+				
 				for(Truck da: DeliveryAgents) {
+					
 					System.out.print("DA" + da.TruckID + ": I'm off! Delivering packages to");
 					
 					for(Node loc: da.Locations) {
