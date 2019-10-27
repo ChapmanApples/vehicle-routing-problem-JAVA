@@ -116,7 +116,7 @@ public class Optimum_pathfinder {
 //	    	  System.out.print(arr);
 //	      }
 //	      System.out.println();
-	      childmethod newmethod = new childmethod(Parent1,Parent2);
+	      CrossoverChild newmethod = new CrossoverChild(Parent1,Parent2);
 	      
 	      int[] final_parent= newmethod.childrun();
 	    
@@ -193,7 +193,7 @@ public class Optimum_pathfinder {
 	    	  System.out.print(arr);
 	      }
 	      System.out.println();
-	      childmethod newmethod = new childmethod(Parent1,Parent2);
+	      CrossoverChild newmethod = new CrossoverChild(Parent1,Parent2);
 	      
 	      int[] final_parent= newmethod.childrun();
 	      System.out.println("Optimized set for the given set of location");
