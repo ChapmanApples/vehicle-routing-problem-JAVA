@@ -56,8 +56,16 @@ public class GridClass extends Application {
 	public Stage primaryStage;
 	public Group root;
 	public Scene scene;
-	public Path pathline = new Path();
+	public Path pathline1 = new Path();
+	public Path pathline2 = new Path();
+	public Path pathline3 = new Path();
+	
 	public int[] trialpathlines = {1,2,3,9,8,7,6};
+	public int[] agent1;
+	public int[] agent2;
+	public int[] agent3;
+	
+	
 	
 	 private static int[][] location = {{456,320},
 				{228,0},
@@ -140,7 +148,7 @@ public class GridClass extends Application {
 	@Override
 	public void start(Stage stg) throws Exception {
 		// TODO Auto-generated method stub
-		//primaryStage = new Stage();
+		primaryStage = new Stage();
 		try {
 
 			Group root = new Group();
@@ -154,15 +162,11 @@ public class GridClass extends Application {
 			int l =0;
 			int node=0;
 			for(int[] loc:location) {
-				
 				Circle circle1 = new Circle((loc[0]/10)*6+10,(loc[1]/10)*6+10,5);
-				
 				if(node==0) {
 					System.out.println((loc[1]/10)*6+10+" "+((loc[1]/10)*6+10));
 					circle1.setFill(Color.DARKRED);
 				}
-				
-				//root.getChildren().add(circle1);
 				Label labels = new Label(""+node);
 				labels.setLayoutX((loc[0]/10)*6+20);
 				labels.setLayoutY((loc[1]/10)*6+10);
@@ -171,52 +175,64 @@ public class GridClass extends Application {
 				node++;
 			}
 			
-				//view.add(root, 0, 0);
-
-			//sroot.getChildren().add(new Circle(10,10,10));
 		      scene = new Scene(root, 600,600);
-		     
-		      
-//		      
-//		      primaryStage.setTitle("Sample application");
-//
-//		      //Adding the scene to the stage
-//		      primaryStage.setScene(scene);
-//
-//		      //Displaying the contents of a scene
-//		      primaryStage.show();
+		      primaryStage.setTitle("Sample application");
+		      primaryStage.setScene(scene);
+		      primaryStage.show();
 		      inputScreen();
-		      drawonScreen();
 
 		}catch(Exception e) {
 			System.out.println("Error found in exception: "+e);
 		}
 	}
 	
-	public void drawonScreen() {			//assign a variable for initalization drawonScreen int trialpathlines to draw
-		//pathline = new Path();		
+	public void drawonScreen(int[] locationlist,int pathlineval) {			//assign a variable for initalization drawonScreen int trialpathlines to draw
+		clearPathlines();
+		Path pathline;
+		
+		switch(pathlineval) {
+			case 1:
+				 pathline = pathline1;
+			case 2:
+				 pathline = pathline2;
+			case 3:
+				 pathline = pathline3;
+			default:
+				pathline = pathline1;
+		}
+		
+	
 		MoveTo moveTo = new MoveTo((location[0][0]/10)*6+10,(location[0][1]/10)*6+10);		//start at depot
 		pathline.getElements().add(moveTo);
-		for(int r:trialpathlines) {
+		for(int r:locationlist) {
 			LineTo line1 = new LineTo((location[r][0]/10)*6+10,(location[r][1]/10)*6+10);
 			pathline.getElements().add(line1);
 		}
 		LineTo endLine = new LineTo((location[0][0]/10)*6+10,(location[0][1]/10)*6+10);		//end at depot
 		pathline.getElements().add(endLine);
+		
 		Group root = (Group) scene.getRoot();		
 		if(!root.getChildren().contains(pathline))
 		{
 			root.getChildren().add(pathline);
+		}else {
+			root.getChildren().remove(pathline);
+			root.getChildren().add(pathline);
+			
 		}
-	
-		
-		
 		scene.setRoot(root);
 	}
 	
 	public void clearPathlines() {
 		Group root = (Group) scene.getRoot();
-		root.getChildren().remove(pathline);
+		
+		root.getChildren().remove(pathline1);
+		root.getChildren().remove(pathline2);
+		root.getChildren().remove(pathline3);
+		pathline1= new Path();
+		pathline2= new Path();
+		pathline3= new Path();		
+		
 		scene.setRoot(root);
 	}
 	
@@ -226,8 +242,10 @@ public class GridClass extends Application {
 		Stage stage = new Stage();
 		Button btnSource = new Button("Choose Source");
 		Label lblSource = new Label("");
-		HBox hboxSource = new HBox(btnSource,lblSource );
+		Label SumLabel = new Label("Sum"); 
+		Label Cost = new Label("NA");
 		
+		HBox hboxSource = new HBox(btnSource,lblSource );
 		
 		btnSource.setOnAction(e -> { 
 		FileChooser  file = new FileChooser();
@@ -244,19 +262,42 @@ public class GridClass extends Application {
 		TextArea txtR = new TextArea();
 		txtR.setText(selectedFile.getName());
 		GridPane grdPane = new GridPane();
-		Button nwBtn = new Button("draw");
-		Button nwBtn2 = new Button("draw2");
+		Button Agent1 = new Button("Agent 1");
+		Button Agent2 = new Button("Agent 2");
+		Button Agent3 = new Button("Agent 3");
+		Button Clear = new Button("Clear");
 		
-		//pathline = new Path();
-		nwBtn.setOnAction(e->{
-
-			drawonScreen();
+		 
+		Agent1.setOnAction(e->{
+			clearPathlines();
+			drawonScreen(agent1,1);
+			int getSum = getSum(agent1);
+			Cost.setText(Integer.toString(getSum));
 				
 		});
 		
-		nwBtn2.setOnAction(e->{
+		Agent2.setOnAction(e->{
 			clearPathlines();
+			drawonScreen(agent2,2);
+			int getSum = getSum(agent2);
+			Cost.setText(Integer.toString(getSum));
+			
 		});
+		
+		Agent3.setOnAction(e->{
+			clearPathlines();
+			drawonScreen(agent3,3);
+			int getSum = getSum(agent3);
+			Cost.setText(Integer.toString(getSum));
+			
+		});
+		
+		Clear.setOnAction(e->{
+			clearPathlines();
+			Cost.setText("N/A");
+		});
+		
+		
 		
 		grdPane.setPadding(new Insets(10,10,10,10));
 		//grdPane.setMinSize(10, 10);
@@ -267,8 +308,6 @@ public class GridClass extends Application {
 		grdPane.addRow(0,hboxSource);
 		grdPane.addRow(1,hbox);
 		grdPane.addRow(2, txtR);
-		grdPane.addRow(3, nwBtn);
-		grdPane.addRow(4, nwBtn2);
 		
 		btnSearch.setOnAction(e -> {
 			BufferedReader reader = null;
@@ -318,15 +357,13 @@ public class GridClass extends Application {
 			
 		});
 		
+		
+		
 		Button Submit = new Button("Submit");
 		Submit.setMinWidth(100);
-//		Button btnPieChart = new Button("Pie Chart");
-//		btnPieChart.setMinWidth(100);
 			
 		
 		Submit.setOnAction( e-> { 
-			//primaryStage.close();
-			stage.close();
 			Node[] ArrayNode = NodeLists();
 			Runtime rt = Runtime.instance();
 			Profile pMain = new ProfileImpl(null, 8888, null);
@@ -377,10 +414,56 @@ public class GridClass extends Application {
 					System.out.print("DA" + da.TruckID + ": I'm off! Delivering packages to");
 					}
 					for(Node loc: da.Locations) {
+						
 						System.out.print(" Location "+ loc.ID);
 					}
 					System.out.println();
+					
 				}
+				
+				//Assign Truck locations into the array
+				for(int j=0;j<DeliveryAgents.size();j++) {
+					
+					Truck CrntTruck = DeliveryAgents.get(j);
+					int CrntTrucksize = CrntTruck.Locations.size();
+					int[] crntagent =new int[CrntTrucksize];
+					
+					for(int k=0; k<CrntTrucksize;k++) {
+						crntagent[k] = CrntTruck.Locations.get(k).ID;					
+					}
+					
+					switch(j) {
+						case 0:
+							agent1 = crntagent;
+							
+						case 1:
+							agent2 = crntagent;
+							
+						case 2:
+							agent3 = crntagent;
+					}
+					
+				}
+				System.out.println("Agent 1");
+				for(int ag:agent1) {
+					System.out.print(ag);
+					//drawonScreen(agent1);
+				}
+				System.out.println();
+				
+				System.out.println("Agent 2");
+				for(int ag:agent2) {
+					System.out.println(ag);
+					//drawonScreen(agent2);
+				}
+				System.out.println();
+				
+				System.out.println("Agent 3");
+				for(int ag:agent3) {
+					System.out.println(ag);
+					//drawonScreen(agent3);
+				}
+				System.out.println();
 				
 			} catch (StaleProxyException e1) {
 				// TODO Auto-generated catch block
@@ -398,11 +481,27 @@ public class GridClass extends Application {
 		
 		
 		
-		
+
 		HBox hboxChart = new HBox(10, Submit);
 		hboxChart.setAlignment(Pos.CENTER); 
 		
+		HBox DrawnClear = new HBox(Agent1,Agent2,Agent3);
+		DrawnClear.setSpacing(30);
+		DrawnClear.setAlignment(Pos.CENTER);
+		
+		HBox Sum = new HBox(SumLabel,Cost);
+		Sum.setAlignment(Pos.CENTER);
+		
+		
+		HBox ClearPathline = new HBox(Clear);
+		ClearPathline.setAlignment(Pos.CENTER);
+		
+		
+		
 		grdPane.addRow(3, hboxChart);
+		grdPane.addRow(4, DrawnClear);
+		grdPane.addRow(5, Sum);
+		grdPane.addRow(6, ClearPathline);
 		
 		Scene scene = new Scene(grdPane,300,400);
 		stage.setScene(scene);
@@ -410,6 +509,17 @@ public class GridClass extends Application {
 		stage.show();
 		
 	}
+	
+	public static int getSum(int[] array) {
+		  Optimum_pathfinder cls= new Optimum_pathfinder();
+		  int Sum = cls.find_distance(0,array[0]);
+		  
+		  
+		  for(int i=0;i<array.length-1;i++) {
+			  Sum = Sum+cls.find_distance(array[i], array[i+1]);
+		  }
+		  return Sum;
+	  }
 	
 	public void DrawLine() {
 		

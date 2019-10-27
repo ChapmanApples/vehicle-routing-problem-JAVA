@@ -197,7 +197,8 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 				}
 					
 				}
-				// Continue listening //    
+				// Continue listening // 
+				System.out.println("BLOCKED!!!");
 				block();  
 				
 				}
