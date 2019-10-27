@@ -204,21 +204,6 @@ public class Optimum_pathfinder {
 	    	  System.out.print(arr);
 	      }
 	      
-	     //Stage stg = new Stage();
-	      GridClass gridlines = new GridClass();
-	      gridlines.DrawLine();
-	      gridlines.startStage();
-	      try {
-			Thread.sleep(2000);
-			
-			System.out.println("This is another line");
-		    //gridlines.DrawLine();
-		    
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	      System.out.println("this line isn't printed");
 	  
     
     }
