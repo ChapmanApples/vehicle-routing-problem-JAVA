@@ -370,7 +370,10 @@ public class childmethod {
 	  
 	  public static int getSum(int[] array) {
 		  Optimum_pathfinder cls= new Optimum_pathfinder();
-		  int Sum = cls.find_distance(depot,array[0]);
+		  int Sum = 0;
+		  if(array.length>0) {
+		   Sum = cls.find_distance(depot,array[0]);
+		  }
 		  
 		  
 		  for(int i=0;i<array.length-1;i++) {

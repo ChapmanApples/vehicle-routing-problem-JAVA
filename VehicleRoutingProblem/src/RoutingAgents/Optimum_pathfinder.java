@@ -255,11 +255,15 @@ public class Optimum_pathfinder {
     public static int getSum(int[] array) {
 		  int Sum = 0;
 		  Optimum_pathfinder cls= new Optimum_pathfinder();
+		  if(array.length>0) {
 		  Sum +=cls.find_distance(0, array[0]);
+		  }
 		  for(int i=0;i<array.length-1;i++) {
 			  Sum = Sum+cls.find_distance(array[i], array[i+1]);
 		  }
+		  if(array.length>0) {
 		  Sum +=cls.find_distance(array.length-1, 0);
+		  }
 		  return Sum;
 	  }
     
