@@ -4,9 +4,9 @@ import java.util.Random;
 public class childmethod {
 	
 	
-	private int[] Parent1;
-	private int[] Parent2;
-	private int[] Parentret;	
+	private int[] Parent1; //Declaring Parent 1
+	private int[] Parent2; // Declaring Parent 2
+	private int[] Parentret;
 	private static int depot = 0;
 	
 	public childmethod(int[] Parent1, int[] Parent2) {	
