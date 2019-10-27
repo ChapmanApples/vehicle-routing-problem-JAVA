@@ -200,6 +200,7 @@ public class Optimum_pathfinder {
 	      System.out.println("First Sum: "+newmethod.getSum(Selected_locations));
 	      System.out.println("Final Sum "+newmethod.getSum(final_parent));
 	      
+	      
 	      for(int arr:final_parent) {
 	    	  System.out.print(arr);
 	      }
