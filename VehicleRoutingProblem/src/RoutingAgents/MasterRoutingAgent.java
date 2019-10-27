@@ -102,7 +102,8 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 						}
 					}
 
-					System.out.println("You have 3 delivery trucks with a combined capacity of 60kg");
+					System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
+					
 					assigned_trucks = search.run(trucks, Selected_Locations);
 				
 					locations = world.TellMeLocations();
@@ -197,7 +198,8 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 				}
 					
 				}
-				// Continue listening //    
+				// Continue listening // 
+				System.out.println("BLOCKED!!!");
 				block();  
 				
 				}

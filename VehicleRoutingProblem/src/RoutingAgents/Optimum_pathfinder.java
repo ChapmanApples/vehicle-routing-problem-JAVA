@@ -116,7 +116,7 @@ public class Optimum_pathfinder {
 //	    	  System.out.print(arr);
 //	      }
 //	      System.out.println();
-	      childmethod newmethod = new childmethod(Parent1,Parent2);
+	      CrossoverChild newmethod = new CrossoverChild(Parent1,Parent2);
 	      
 	      int[] final_parent= newmethod.childrun();
 	    
@@ -193,32 +193,18 @@ public class Optimum_pathfinder {
 	    	  System.out.print(arr);
 	      }
 	      System.out.println();
-	      childmethod newmethod = new childmethod(Parent1,Parent2);
+	      CrossoverChild newmethod = new CrossoverChild(Parent1,Parent2);
 	      
 	      int[] final_parent= newmethod.childrun();
 	      System.out.println("Optimized set for the given set of location");
 	      System.out.println("First Sum: "+newmethod.getSum(Selected_locations));
 	      System.out.println("Final Sum "+newmethod.getSum(final_parent));
 	      
+	      
 	      for(int arr:final_parent) {
 	    	  System.out.print(arr);
 	      }
 	      
-	     //Stage stg = new Stage();
-	      GridClass gridlines = new GridClass();
-	      gridlines.DrawLine();
-	      gridlines.startStage();
-	      try {
-			Thread.sleep(2000);
-			
-			System.out.println("This is another line");
-		    //gridlines.DrawLine();
-		    
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	      System.out.println("this line isn't printed");
 	  
     
     }
@@ -255,11 +241,15 @@ public class Optimum_pathfinder {
     public static int getSum(int[] array) {
 		  int Sum = 0;
 		  Optimum_pathfinder cls= new Optimum_pathfinder();
+		  if(array.length>0) {
 		  Sum +=cls.find_distance(0, array[0]);
+		  }
 		  for(int i=0;i<array.length-1;i++) {
 			  Sum = Sum+cls.find_distance(array[i], array[i+1]);
 		  }
+		  if(array.length>0) {
 		  Sum +=cls.find_distance(array.length-1, 0);
+		  }
 		  return Sum;
 	  }
     

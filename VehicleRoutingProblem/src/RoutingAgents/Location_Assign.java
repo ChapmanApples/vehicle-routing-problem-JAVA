@@ -121,13 +121,18 @@ public ArrayList<Truck> run(ArrayList<Truck> a, Node[] Selected_Locations){
 			if (Total_running_sum<Total_Sum) {
 				Total_Sum = Total_running_sum;
 				Optimum_pathfinder findA = new Optimum_pathfinder(Truck1);
+				if(Truck1.length>0) {
 				Truck1 = findA.run();
-
+				}
 				Optimum_pathfinder findB = new Optimum_pathfinder(Truck2);
+				if(Truck2.length>0) {
 				Truck2 = findB.run();
+				}
 
 				Optimum_pathfinder findC = new Optimum_pathfinder(Truck3);
+				if(Truck3.length>0) {
 				Truck3 = findC.run();
+				}
 			}
 
 		}
