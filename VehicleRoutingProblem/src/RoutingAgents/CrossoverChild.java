@@ -130,9 +130,11 @@ public class CrossoverChild {
 	// Method to get the first child
 	public static int[] getChild1(int[] P1, int[] P2) { 
 		 Random rand = new Random(); // generating a random number
+		 
 		int length = P1.length; // getting length of parent 1
 		int[] Child= new int [length]; // Defining a new Child array with the same length as that of parent 1
-		int crsspoint= rand.nextInt(length); // getting the random crosspoint by dividing the parent length by 1
+		int crsspoint= rand.nextInt(length); // getting the random crosspoint 
+		
 		for(int i=0;i<length;i++) {
 			if(i<=crsspoint) { 
 				Child[i]=P1[i]; // assigning the first part of parent 1 to child

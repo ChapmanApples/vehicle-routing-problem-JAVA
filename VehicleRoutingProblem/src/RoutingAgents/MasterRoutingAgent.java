@@ -103,6 +103,7 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 					}
 
 					System.out.println("You have 3 delivery trucks with a combined capacity of 30kg");
+					
 					assigned_trucks = search.run(trucks, Selected_Locations);
 				
 					locations = world.TellMeLocations();
