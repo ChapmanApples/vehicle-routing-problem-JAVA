@@ -55,10 +55,10 @@ public class DeliveryAgent2 extends Agent{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}     
-			Iterator<?> receivers = msg.getAllIntendedReceiver();       
-			while(receivers.hasNext()) {        
-				System.out.println(((AID)receivers.next()).getLocalName());       
-			}   
+			//Iterator<?> receivers = msg.getAllIntendedReceiver();       
+			//while(receivers.hasNext()) {        
+			//	System.out.println(((AID)receivers.next()).getLocalName());       
+			//}   
 			send(msg); 	
 	}
 }

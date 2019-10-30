@@ -59,6 +59,8 @@ public class GridClass extends Application {
 	public Path pathline1 = new Path();
 	public Path pathline2 = new Path();
 	public Path pathline3 = new Path();
+	public int routeNumber = 0;
+	public Node[] FilteredArrayNode;
 	
 	public int[] trialpathlines = {1,2,3,9,8,7,6};
 	public int[] agent1;
@@ -85,7 +87,7 @@ public class GridClass extends Application {
 				{798,640}};
 	
 	public GridClass(/*Stage stg*/) {
-		Nodes =new ArrayList<Node>();
+		//Nodes =new ArrayList<Node>();
 		view= new GridPane();
 		root = new Group();
 		Path pathline = new Path();
@@ -247,7 +249,8 @@ public class GridClass extends Application {
 		
 		HBox hboxSource = new HBox(btnSource,lblSource );
 		
-		btnSource.setOnAction(e -> { 
+		btnSource.setOnAction(e -> {
+		routeNumber = 0;
 		FileChooser  file = new FileChooser();
 		file.setTitle("Open File");		
 		selectedFile = file.showOpenDialog(stage); 
@@ -311,6 +314,7 @@ public class GridClass extends Application {
 		
 		btnSearch.setOnAction(e -> {
 			BufferedReader reader = null;
+			//routeNumber = 0;
 			try
 			{
 				txtR.setText("");
@@ -330,6 +334,7 @@ public class GridClass extends Application {
 				}
 				reader.close();
 				
+				Nodes =new ArrayList<Node>();
 				for(int j=0;j<16;j++) {
 					int weight=0; int k = 0;
 					for(Integer nod:NodeId) {
@@ -368,6 +373,9 @@ public class GridClass extends Application {
 			Runtime rt = Runtime.instance();
 			Profile pMain = new ProfileImpl(null, 8888, null);
 			ContainerController mainCtrl = rt.createMainContainer(pMain);
+			if(routeNumber > 0) {
+				ArrayNode = FilteredArrayNode;
+			}
 			
 			try {
 				Thread.sleep(1000);
@@ -376,98 +384,129 @@ public class GridClass extends Application {
 				e1.printStackTrace();
 			}
 			
-			AgentController MA;
-			AgentController DA1;
-			AgentController DA2;
-			AgentController DA3;
-			
-			try {
-				MA = mainCtrl.createNewAgent("MasterAgent", MasterRoutingAgent.class.getName(), new Object[0]);
-				DA1 = mainCtrl.createNewAgent("DA1", DeliveryAgent1.class.getName(), new Object[0]);
-				DA2 = mainCtrl.createNewAgent("DA2", DeliveryAgent2.class.getName(), new Object[0]);
-				DA3 = mainCtrl.createNewAgent("DA3", DeliveryAgent3.class.getName(), new Object[0]); 
+			if(ArrayNode.length > 0) {
 				
-				MyAgentInterface o2a = MA.getO2AInterface(MyAgentInterface.class);
-				for(Node n:ArrayNode) {
-					System.out.println(n.ID+" "+n.weight);
-				}
-				o2a.recieveLocations(ArrayNode);
-				
-				MA.start();	
-				DA1.start();
-				DA2.start();
-				DA3.start();
-				
+				AgentController MA;
+				AgentController DA1;
+				AgentController DA2;
+				AgentController DA3;
 				
 				try {
-					Thread.sleep(10000);
+					MA = mainCtrl.createNewAgent("MasterAgent", MasterRoutingAgent.class.getName(), new Object[0]);
+					DA1 = mainCtrl.createNewAgent("DA1", DeliveryAgent1.class.getName(), new Object[0]);
+					DA2 = mainCtrl.createNewAgent("DA2", DeliveryAgent2.class.getName(), new Object[0]);
+					DA3 = mainCtrl.createNewAgent("DA3", DeliveryAgent3.class.getName(), new Object[0]); 
 					
-				} catch (InterruptedException e1) {
+					MyAgentInterface o2a = MA.getO2AInterface(MyAgentInterface.class);
+					for(Node n:ArrayNode) {
+						System.out.println(n.ID+" "+n.weight);
+					}
+					o2a.recieveLocations(ArrayNode);
+					
+					MA.start();	
+					DA1.start();
+					DA2.start();
+					DA3.start();
+					
+					
+					try {
+						Thread.sleep(6000);
+						
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					DeliveryAgents = o2a.sendLocations();
+					
+					rt.shutDown();
+					
+					//MA.suspend();
+					//DA1.suspend();
+					//DA2.suspend();
+					//DA3.suspend();
+					
+					ArrayList<Node> filteringArrayNode = new ArrayList<Node>();
+					
+					for(Node n: ArrayNode) {
+						filteringArrayNode.add(n);
+					}
+					
+					for(Truck da: DeliveryAgents) {
+						if(da.Locations!=null) {
+						System.out.print("DA" + da.TruckID + ": I'm off! Delivering packages to");
+						}
+						for(Node loc: da.Locations) {
+							if(filteringArrayNode.contains(loc)) {
+								filteringArrayNode.remove(loc);
+							}
+							
+							System.out.print(" Location "+ loc.ID);
+						}
+						FilteredArrayNode = new Node[filteringArrayNode.size()];
+						if(filteringArrayNode.size() > 0) {
+							for(int n = 0; n < FilteredArrayNode.length; n++) {
+								FilteredArrayNode[n] = filteringArrayNode.get(n);
+							}
+						}
+						System.out.println();
+						
+					}
+					
+					//Assign Truck locations into the array
+					for(int j=0;j<DeliveryAgents.size();j++) {
+						
+						Truck CrntTruck = DeliveryAgents.get(j);
+						int CrntTrucksize = CrntTruck.Locations.size();
+						int[] crntagent =new int[CrntTrucksize];
+						
+						for(int k=0; k<CrntTrucksize;k++) {
+							crntagent[k] = CrntTruck.Locations.get(k).ID;					
+						}
+						
+						switch(j) {
+							case 0:
+								agent1 = crntagent;
+								
+							case 1:
+								agent2 = crntagent;
+								
+							case 2:
+								agent3 = crntagent;
+						}
+						
+					}
+					System.out.println("Agent 1");
+					for(int ag:agent1) {
+						System.out.print(ag);
+						//drawonScreen(agent1);
+					}
+					System.out.println();
+					
+					System.out.println("Agent 2");
+					for(int ag:agent2) {
+						System.out.println(ag);
+						//drawonScreen(agent2);
+					}
+					System.out.println();
+					
+					System.out.println("Agent 3");
+					for(int ag:agent3) {
+						System.out.println(ag);
+						//drawonScreen(agent3);
+					}
+					System.out.println();
+					
+				} catch (StaleProxyException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
-				DeliveryAgents = o2a.sendLocations();
-				
-				for(Truck da: DeliveryAgents) {
-					if(da.Locations!=null) {
-					System.out.print("DA" + da.TruckID + ": I'm off! Delivering packages to");
-					}
-					for(Node loc: da.Locations) {
-						
-						System.out.print(" Location "+ loc.ID);
-					}
-					System.out.println();
-					
-				}
-				
-				//Assign Truck locations into the array
-				for(int j=0;j<DeliveryAgents.size();j++) {
-					
-					Truck CrntTruck = DeliveryAgents.get(j);
-					int CrntTrucksize = CrntTruck.Locations.size();
-					int[] crntagent =new int[CrntTrucksize];
-					
-					for(int k=0; k<CrntTrucksize;k++) {
-						crntagent[k] = CrntTruck.Locations.get(k).ID;					
-					}
-					
-					switch(j) {
-						case 0:
-							agent1 = crntagent;
-							
-						case 1:
-							agent2 = crntagent;
-							
-						case 2:
-							agent3 = crntagent;
-					}
-					
-				}
-				System.out.println("Agent 1");
-				for(int ag:agent1) {
-					System.out.print(ag);
-					//drawonScreen(agent1);
-				}
-				System.out.println();
-				
-				System.out.println("Agent 2");
-				for(int ag:agent2) {
-					System.out.println(ag);
-					//drawonScreen(agent2);
-				}
-				System.out.println();
-				
-				System.out.println("Agent 3");
-				for(int ag:agent3) {
-					System.out.println(ag);
-					//drawonScreen(agent3);
-				}
-				System.out.println();
-				
-			} catch (StaleProxyException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				routeNumber++;
+			}
+			else {
+				rt.shutDown();
+				System.out.println("All locations have been delivered to! Please add new orders");
 			}
 			
 //			Node[] ArrayNode = NodeLists();

@@ -114,7 +114,7 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 					if(t.TruckID == 1) {
 						ACLMessage msg_pos = new ACLMessage(ACLMessage.INFORM);
 						try {
-							msg_pos.setContentObject(t);
+							msg_pos.setContentObject(t);					
 							String da1_route = "(";
 							for(Node l: t.Locations) {
 								if(l == t.Locations.get(t.Locations.size() - 1)) {
@@ -132,7 +132,7 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 						msg_pos.addReceiver(new AID("DA1", AID.ISLOCALNAME) );	  
 						send(msg_pos);
 						try {
-							Thread.sleep(2000);
+							Thread.sleep(1000);
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -160,7 +160,7 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 						msg_pos.addReceiver(new AID("DA2", AID.ISLOCALNAME) );	  
 						send(msg_pos);
 						try {
-							Thread.sleep(2000);
+							Thread.sleep(1000);
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -187,20 +187,20 @@ public class MasterRoutingAgent extends Agent implements MyAgentInterface{
 						msg_pos.addReceiver(new AID("DA3", AID.ISLOCALNAME) );	  
 						send(msg_pos);
 						try {
-							Thread.sleep(2000);
+							Thread.sleep(1000);
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
+							}
 						}
-					}
 					
 					}
 				}
 					
 				}
 				// Continue listening // 
-				System.out.println("BLOCKED!!!");
-				block();  
+				System.out.println("STOPPED!!!");
+				block();
 				
 				}
 			} );
