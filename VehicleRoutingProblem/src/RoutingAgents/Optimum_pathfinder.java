@@ -56,14 +56,9 @@ public class Optimum_pathfinder {
         };
         
         //public static int[] Selected_locations = {1,6,5,9,14,12};
-    public int[] run() {
-    	int[] Parent_X;
-    	int[] array_contain= new int[Selected_locations.length];
-    	
+    public int[] run() {   	
 		
 		int size = Selected_locations.length;
-		int[] ParentX =new int[size];
-		int[] ParentY = new int[size];
 		ArrayList<Integer> list = new ArrayList<Integer>(size); 
        
 		int[] Array= new int[size];
@@ -124,7 +119,7 @@ public class Optimum_pathfinder {
     }
     
     
-    public static void main(String[] args) {
+    public void main(String[] args) {
     	System.out.println("Node:"+ location[0][0]+"\t"+location[0][1]);
     	System.out.println("X\t"+"Y\t"+"Distance");
 		System.out.println("-------------------");
@@ -134,13 +129,8 @@ public class Optimum_pathfinder {
     		System.out.println(location[loc][0]+"\t"+location[loc][1]+"\t"+distanceMatrix[0][loc]);
     	}
     	
-    	int[] Parent_X;
-    	int[] array_contain= new int[Selected_locations.length];
-    	
 		
 		int size = Selected_locations.length;
-		int[] ParentX =new int[size];
-		int[] ParentY = new int[size];
 		ArrayList<Integer> list = new ArrayList<Integer>(size); 
        
 		int[] Array= new int[size];
@@ -212,11 +202,11 @@ public class Optimum_pathfinder {
     
     
     //distance between two points
-    public static int find_distance(int from, int to) {
+    public int find_distance(int from, int to) {
 		return	distanceMatrix[from][to];
 	}
     
-    public static int[] generateRandomIndex(int size) {
+    public int[] generateRandomIndex(int size) {
     	ArrayList<Integer> list = new ArrayList<Integer>(size);
     	int[] Array= new int[size];
 		 for(int i = 1; i <= size; i++) {
@@ -238,7 +228,7 @@ public class Optimum_pathfinder {
     	return Array;
     }
     
-    public static int getSum(int[] array) {
+    public int getSum(int[] array) {
 		  int Sum = 0;
 		  Optimum_pathfinder cls= new Optimum_pathfinder();
 		  if(array.length>0) {

@@ -7,8 +7,8 @@ import java.util.List;
 public class Location_Assign {
 
 
-	private static int location_optimized[]  = {};
-	private static int Total_Sum=999999999;
+	private int location_optimized[]  = {};
+	private int Total_Sum=999999999;
 	//Node[] Selected_Locations = new Node[16];
 
 //	public Location_Assign(int[] loc1, int[] loc2, int[] loc3) {
@@ -112,30 +112,59 @@ public ArrayList<Truck> run(ArrayList<Truck> a, Node[] Selected_Locations){
 		}
 		System.out.println();
 		int Total_running_sum=0;
+		int running_sum_1 = 0;
+		int running_sum_2 = 0;
+		int running_sum_3 = 0;
+		int best_1 = 999999;
+		int best_2 = 999999;
+		int best_3 = 999999;
 		Total_running_sum = optimize.getSum(Truck1)+optimize.getSum(Truck2)+optimize.getSum(Truck3);
 		System.out.println("Total:" +Total_running_sum);
+		int iteration =0;
 		for(i=0;i<2000;i++) {
+			
 
+			running_sum_1 = optimize.getSum(Truck1);
 
-			Total_running_sum = optimize.getSum(Truck1)+optimize.getSum(Truck2)+optimize.getSum(Truck3);
-			if (Total_running_sum<Total_Sum) {
-				Total_Sum = Total_running_sum;
+			if (running_sum_1 <= best_1) {
+				iteration=i;
+				best_1 = running_sum_1;
 				Optimum_pathfinder findA = new Optimum_pathfinder(Truck1);
 				if(Truck1.length>0) {
 				Truck1 = findA.run();
 				}
+			}
+			
+			running_sum_2 = optimize.getSum(Truck2);
+			
+			if (running_sum_2 <= best_2) {
+				iteration=i;
+				best_2 = running_sum_2;
 				Optimum_pathfinder findB = new Optimum_pathfinder(Truck2);
 				if(Truck2.length>0) {
 				Truck2 = findB.run();
 				}
-
+			}
+			
+			running_sum_3 = optimize.getSum(Truck3);
+			
+			if (running_sum_3 <= best_3) {
+				iteration=i;
+				best_3 = running_sum_3;
 				Optimum_pathfinder findC = new Optimum_pathfinder(Truck3);
 				if(Truck3.length>0) {
 				Truck3 = findC.run();
 				}
+
 			}
+			
+			Total_running_sum = best_1+best_2+best_3;
+					
 
 		}
+		
+		Total_Sum = best_1+best_2+best_3;
+		System.out.println("Iteration1: "+iteration);
 		System.out.println("Truck 1");
 		i=0;
 		for(int s:Truck1) {
@@ -145,6 +174,7 @@ public ArrayList<Truck> run(ArrayList<Truck> a, Node[] Selected_Locations){
 		}
 		i=0;
 		System.out.println();
+		System.out.println("sum"+best_1);
 		System.out.println("Truck 2");
 		for(int s:Truck2) {
 			Truck2[i]=s;
@@ -152,6 +182,7 @@ public ArrayList<Truck> run(ArrayList<Truck> a, Node[] Selected_Locations){
 			i++;
 		}
 		System.out.println();
+		System.out.println("sum"+best_2);
 		System.out.println("Truck 3");
 		i=0;
 		for(int s:Truck3) {
@@ -160,6 +191,7 @@ public ArrayList<Truck> run(ArrayList<Truck> a, Node[] Selected_Locations){
 			i++;
 		}
 		System.out.println();
+		System.out.println("sum"+best_3);
 		System.out.println("Total:"+Total_Sum);
 		truck1.getLocations(Truck1, Selected_Locations);
 		truck2.getLocations(Truck2, Selected_Locations);

@@ -26,7 +26,7 @@ public class CrossoverChild {
 		}
 		return Parentret;
 	}	
-	public static void main(String[] args) {
+	public void main(String[] args) {
 		int[] p1, p2;
 		int[] Parent1= new int[] {3,14,9,1,5,13};
 		int[] Parent2= new int[] {5,1,9,13,14,3};		
@@ -43,7 +43,7 @@ public class CrossoverChild {
 		System.out.println("Sum Parent2 updated "+getSum(Parent2));		
 	}
 	//Main run method
-	public static int[][] run(int[] Parent1, int[] Parent2) {
+	public int[][] run(int[] Parent1, int[] Parent2) {
 		int[] Childcrossover1= getChild1(Parent1,Parent2); //a1 b2: 1st part of parent 1 and 2nd part of parent 2 
 		int[] Childcrossover2= getChild2(Parent1,Parent2);//b1 a2: 1st part of parent 2 and 2nd part of parent 1
 		int[] Childcrossover3= getChild3(Parent1,Parent2);//a1 b1:1st part of both parents
@@ -133,7 +133,7 @@ public class CrossoverChild {
 		 
 		int length = P1.length; // getting length of parent 1
 		int[] Child= new int [length]; // Defining a new Child array with the same length as that of parent 1
-		int crsspoint= rand.nextInt(length); // getting the random crosspoint 
+		int crsspoint= length/2; // getting the random crosspoint 
 		
 		for(int i=0;i<length;i++) {
 			if(i<=crsspoint) { 
@@ -171,7 +171,7 @@ public class CrossoverChild {
 		int length = P1.length; // getting length of parent 1
 		int[] Child= new int [length]; // making a new child array of same length
 		Random rand = new Random(); // generating a random number
-		int crsspoint= rand.nextInt(length); // getting the random crosspoint value
+		int crsspoint= length/2; // getting the random crosspoint value
 		for(int i=0;i<length;i++) {
 			if(i<=crsspoint) {
 				Child[i]=P2[i]; // assigning the first part of parent 2 to first part of child
@@ -283,7 +283,7 @@ public class CrossoverChild {
 	    	return ret;
 	    }
 	  // Gets the sum of distances between depot and array's first element, between array indexes and between last element of array and depot
-	  public static int getSum(int[] array) {
+	  public int getSum(int[] array) {
 		  Optimum_pathfinder cls= new Optimum_pathfinder();
 		  int Sum = 0;
 		  if(array.length>0) {
